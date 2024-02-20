@@ -1,0 +1,36 @@
+# Variables to inject into Java variables
+ebayBrowseApiURL: ${EBAY_BROWSE_API_URL}
+ebayApiToken: ${EBAY_API_TOKEN}
+
+eureka:
+    client:
+        service-url:
+            default-zone: ${EUREKA_URI:http:localhost:8761/eureka}
+logging:
+    level:
+        root: warn
+server:
+    port: ${SERVER_PORT}
+spring:
+    application:
+        name: product-service
+    cloud:
+        loadbalancer:
+            cache:
+                enabled: true
+            enabled: true
+    devtools:
+        livereload:
+            enabled: true
+            port: ${LIVERELOAD_PORT:35730}
+    main:
+        banner-mode: 'off'
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://${KEYCLOAK_BASE_URI}/realms/${REALM}
+                opaquetoken:
+                    client-id: product-service
+                    client-secret: ${CLIENT_SECRET}
+                    introspection-uri: http://${KEYCLOAK_BASE_URI}/realms/${REALM}/protocol/openid-connect/token/introspect
