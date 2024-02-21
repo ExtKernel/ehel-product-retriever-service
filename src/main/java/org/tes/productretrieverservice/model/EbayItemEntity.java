@@ -23,6 +23,9 @@ public class EbayItemEntity {
 //    @Column(name = "title")
     private String title;
 
+//    @Column(name = "categories")
+    private List<String> categories;
+
 //    @Column(name = "price")
     private double price;
 

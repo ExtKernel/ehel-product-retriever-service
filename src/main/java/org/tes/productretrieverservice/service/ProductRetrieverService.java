@@ -73,6 +73,23 @@ public class ProductRetrieverService {
                     .setItemId((String) itemMap.get("itemId"));
             retrievedEbayItem.get()
                     .setTitle((String) itemMap.get("title"));
+
+            ArrayList<LinkedHashMap<?, ?>> itemCategoriesMapsArrayList = (ArrayList<LinkedHashMap<?, ?>>) itemMap.get("categories");
+            ArrayList<String> itemCategoriesNamesArrayList = new ArrayList<>();
+
+            for (
+                    int categoriesMapsCounter = 0;
+                    categoriesMapsCounter < itemCategoriesMapsArrayList.size();
+                    categoriesMapsCounter = categoriesMapsCounter + 1
+            ) {
+                LinkedHashMap<?, ?> itemAdditionalImageMap =
+                        itemCategoriesMapsArrayList.get(categoriesMapsCounter);
+
+                itemCategoriesNamesArrayList.add((String) itemAdditionalImageMap.get("categoryName"));
+            }
+            retrievedEbayItem.get()
+                            .setCategories(itemCategoriesNamesArrayList);
+
             retrievedEbayItem.get()
                     .setPrimaryImgUrl((String)
                             (((LinkedHashMap<?, ?>)
