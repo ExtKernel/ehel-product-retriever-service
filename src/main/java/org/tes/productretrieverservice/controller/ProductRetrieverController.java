@@ -19,6 +19,6 @@ public class ProductRetrieverController {
     @GetMapping("/secured")
     public ArrayList<Optional<EbayItemEntity>> retrieveByKeyword(
             @RequestBody Map<String, Object> requestMap) {
-        return service.retrieveEbayItemByKeyword(requestMap);
+        return service.retrieveEbayItemsByKeyword(requestMap);
     }
 }

@@ -30,7 +30,7 @@ public class ProductRetrieverService {
      * @return An ArrayList of retrieved eBay items, written in EbayItemEntity objects.
      */
     @Cacheable(cacheNames = "EbayItemsCache")
-    public ArrayList<Optional<EbayItemEntity>> retrieveEbayItemByKeyword(
+    public ArrayList<Optional<EbayItemEntity>> retrieveEbayItemsByKeyword(
             Map<String, Object> ebayRequestParams
     ) {
         HttpHeaders headers = new HttpHeaders();

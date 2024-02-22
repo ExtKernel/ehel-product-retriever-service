@@ -73,7 +73,7 @@ public class ProductRetrieverControllerIT {
 
     @Order(1)
     @Test
-    public void retrieveEbayItemByKeyword_WhenGivenKeyword_ShouldRespondWithEbayItems()
+    public void retrieveEbayItemsByKeyword_WhenGivenKeyword_ShouldRespondWithEbayItems()
             throws Exception {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("keyword", testKeyword);
@@ -101,7 +101,7 @@ public class ProductRetrieverControllerIT {
 
     @Order(2)
     @Test
-    public void retrieveEbayItemByKeyword_WhenGivenKeywordAndSort_ShouldRespondWithEbayItems()
+    public void retrieveEbayItemsByKeyword_WhenGivenKeywordAndSort_ShouldRespondWithEbayItems()
             throws Exception {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("keyword", testKeyword);
@@ -129,7 +129,7 @@ public class ProductRetrieverControllerIT {
 
     @Order(3)
     @Test
-    public void retrieveEbayItemByKeyword_WhenGivenKeywordAndFilters_ShouldRespondWithEbayItems()
+    public void retrieveEbayItemsByKeyword_WhenGivenKeywordAndFilters_ShouldRespondWithEbayItems()
             throws Exception {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("keyword", testKeyword);
@@ -158,7 +158,7 @@ public class ProductRetrieverControllerIT {
     @Order(4)
     @Test
     public void
-    retrieveEbayItemByKeyword_WhenGivenKeywordAndSortAndFilters_ShouldRespondWithEbayItems()
+    retrieveEbayItemsByKeyword_WhenGivenKeywordAndSortAndFilters_ShouldRespondWithEbayItems()
             throws Exception {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("keyword", testKeyword);
