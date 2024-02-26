@@ -7,7 +7,6 @@ import org.tes.productretrieverservice.model.EbayItemEntity;
 import org.tes.productretrieverservice.service.ProductRetrieverService;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 @RequestMapping("/retrieve")
 @AllArgsConstructor
@@ -17,8 +16,14 @@ public class ProductRetrieverController {
     private ProductRetrieverService service;
 
     @GetMapping("/secured")
-    public ArrayList<Optional<EbayItemEntity>> retrieveByKeyword(
+    public ArrayList<EbayItemEntity> retrieveItemsByKeyword(
             @RequestBody Map<String, Object> requestMap) {
         return service.retrieveEbayItemsByKeyword(requestMap);
+    }
+
+    @GetMapping("/secured/{itemId}")
+    public EbayItemEntity retrieveItemByItemId(@PathVariable String itemId,
+                                               @RequestParam boolean productFieldgroupsEnabled) {
+        return service.retrieveEbayItemByItemId(itemId, productFieldgroupsEnabled);
     }
 }

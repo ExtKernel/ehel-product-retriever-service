@@ -1,5 +1,6 @@
 # Variables to inject into Java variables
-ebayBrowseApiURL: ${EBAY_BROWSE_API_URL}
+ebayItemSummaryApiUrl: ${EBAY_BROWSE_API_ITEM_SUMMARY_URL}
+ebayGetItemApiUrl: ${EBAY_BROWSE_API_GET_ITEM_URL}
 ebayApiToken: ${EBAY_API_TOKEN}
 
 eureka:

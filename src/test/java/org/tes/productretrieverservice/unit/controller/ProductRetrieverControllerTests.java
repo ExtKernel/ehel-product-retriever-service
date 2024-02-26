@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -44,12 +43,12 @@ public class ProductRetrieverControllerTests {
         requestMap.put("filters", null);
 
         EbayItemEntity ebayItem = new EbayItemEntity();
-        ArrayList<Optional<EbayItemEntity>> ebayItemsList = new ArrayList<>();
-        ebayItemsList.add(Optional.of(ebayItem));
+        ArrayList<EbayItemEntity> ebayItemsList = new ArrayList<>();
+        ebayItemsList.add(ebayItem);
 
         when(service.retrieveEbayItemsByKeyword(requestMap)).thenReturn(ebayItemsList);
 
-        assertThat(controller.retrieveByKeyword(requestMap)).isEqualTo(ebayItemsList);
+        assertThat(controller.retrieveItemsByKeyword(requestMap)).isEqualTo(ebayItemsList);
     }
 
     @Test
@@ -60,12 +59,12 @@ public class ProductRetrieverControllerTests {
         requestMap.put("filters", null);
 
         EbayItemEntity ebayItem = new EbayItemEntity();
-        ArrayList<Optional<EbayItemEntity>> ebayItemsList = new ArrayList<>();
-        ebayItemsList.add(Optional.of(ebayItem));
+        ArrayList<EbayItemEntity> ebayItemsList = new ArrayList<>();
+        ebayItemsList.add(ebayItem);
 
         when(service.retrieveEbayItemsByKeyword(requestMap)).thenReturn(ebayItemsList);
 
-        assertThat(controller.retrieveByKeyword(requestMap)).isEqualTo(ebayItemsList);
+        assertThat(controller.retrieveItemsByKeyword(requestMap)).isEqualTo(ebayItemsList);
     }
 
     @Test
@@ -76,12 +75,12 @@ public class ProductRetrieverControllerTests {
         requestMap.put("filters", filters);
 
         EbayItemEntity ebayItem = new EbayItemEntity();
-        ArrayList<Optional<EbayItemEntity>> ebayItemsList = new ArrayList<>();
-        ebayItemsList.add(Optional.of(ebayItem));
+        ArrayList<EbayItemEntity> ebayItemsList = new ArrayList<>();
+        ebayItemsList.add(ebayItem);
 
         when(service.retrieveEbayItemsByKeyword(requestMap)).thenReturn(ebayItemsList);
 
-        assertThat(controller.retrieveByKeyword(requestMap)).isEqualTo(ebayItemsList);
+        assertThat(controller.retrieveItemsByKeyword(requestMap)).isEqualTo(ebayItemsList);
     }
 
     @Test
@@ -92,11 +91,11 @@ public class ProductRetrieverControllerTests {
         requestMap.put("filters", filters);
 
         EbayItemEntity ebayItem = new EbayItemEntity();
-        ArrayList<Optional<EbayItemEntity>> ebayItemsList = new ArrayList<>();
-        ebayItemsList.add(Optional.of(ebayItem));
+        ArrayList<EbayItemEntity> ebayItemsList = new ArrayList<>();
+        ebayItemsList.add(ebayItem);
 
         when(service.retrieveEbayItemsByKeyword(requestMap)).thenReturn(ebayItemsList);
 
-        assertThat(controller.retrieveByKeyword(requestMap)).isEqualTo(ebayItemsList);
+        assertThat(controller.retrieveItemsByKeyword(requestMap)).isEqualTo(ebayItemsList);
     }
 }

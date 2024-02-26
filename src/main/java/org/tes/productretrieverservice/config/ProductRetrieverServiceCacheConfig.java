@@ -21,7 +21,7 @@ public class ProductRetrieverServiceCacheConfig {
 
     @Bean
     public CacheManager cacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("EbayItemsCache");
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("EbayItemsCache", "EbayItemCache");
         cacheManager.setCaffeine(caffeineCacheBuilder());
 
         return cacheManager;

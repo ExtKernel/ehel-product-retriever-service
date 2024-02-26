@@ -12,12 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.tes.productretrieverservice.ProductRetrieverServiceApplication;
-
+import org.tes.productretrieverservice.service.ProductRetrieverService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.tes.productretrieverservice.TestUtils.obtainKeycloakAccessToken;
@@ -34,6 +34,9 @@ public class ProductRetrieverControllerIT {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private ProductRetrieverService service;
 
     @Value("${oauthTestAdminUsername}")
     private String oauthTestAdminUsername;
@@ -81,7 +84,7 @@ public class ProductRetrieverControllerIT {
         requestParams.put("filters", null);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        mvc.perform(get(String.format("/retrieve/secured"))
+        mvc.perform(get("/retrieve/secured")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken)
                         .content(objectMapper.writeValueAsString(requestParams)))
@@ -184,17 +187,25 @@ public class ProductRetrieverControllerIT {
                 .andExpect(jsonPath("$.[9].itemId").isNotEmpty());
     }
 
-// To be implemented
-//    @Test
-//    public void
-//    retrieveEbayItemByEpid_WhenGivenEpid_ShouldRespondWithTheEbayItemWhichHasTheSameId()
-//            throws Exception {
-//        long epid = null;
-//
-//        mvc.perform(get("/retrieve/secured/" + epid)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .header("Authorization", "Bearer " + accessToken))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-//    }
+    @Order(5)
+    @Test
+    public void
+    retrieveEbayItemByItemId_WhenGivenItemId_ShouldRespondWithTheEbayItemWhichHasTheSameId()
+            throws Exception {
+
+        Map<String, Object> requestParams = new HashMap<>();
+        requestParams.put("keyword", testKeyword);
+        requestParams.put("sort", testSort);
+        requestParams.put("filters", filtersList);
+
+        String itemId = service.retrieveEbayItemsByKeyword(requestParams).get(0).getItemId();
+
+        mvc.perform(get("/retrieve/secured/" + itemId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .param("productFieldgroupsEnabled", String.valueOf(true)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.itemId").value(itemId));
+    }
 }

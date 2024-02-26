@@ -14,8 +14,11 @@ import java.util.*;
 @Service
 public class ProductRetrieverService {
 
-    @Value("${ebayBrowseApiURL}")
-    private String ebayApiUrl;
+    @Value("${ebayItemSummaryApiUrl}")
+    private String ebayItemSummaryApiUrl;
+
+    @Value("${ebayGetItemApiUrl}")
+    private String ebayGetItemApiUrl;
 
     @Value("${ebayApiToken}")
     private String ebayToken;
@@ -30,7 +33,7 @@ public class ProductRetrieverService {
      * @return An ArrayList of retrieved eBay items, written in EbayItemEntity objects.
      */
     @Cacheable(cacheNames = "EbayItemsCache")
-    public ArrayList<Optional<EbayItemEntity>> retrieveEbayItemsByKeyword(
+    public ArrayList<EbayItemEntity> retrieveEbayItemsByKeyword(
             Map<String, Object> ebayRequestParams
     ) {
         HttpHeaders headers = new HttpHeaders();
@@ -38,7 +41,7 @@ public class ProductRetrieverService {
         headers.setBearerAuth(ebayToken);
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(ebayApiUrl)
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(ebayItemSummaryApiUrl)
                 .queryParam("q", ebayRequestParams.get("keyword"))
                 .queryParam("limit", 10);
 
@@ -59,85 +62,70 @@ public class ProductRetrieverService {
 
         ArrayList<LinkedHashMap> itemSummariesArrayList =
                 (ArrayList<LinkedHashMap>) response.getBody().get("itemSummaries");
-        ArrayList<Optional<EbayItemEntity>> retrievedEbayItems = new ArrayList<>();
+        ArrayList<EbayItemEntity> retrievedEbayItems = new ArrayList<>();
 
         for (
                 int itemsCounter = 0;
                 itemsCounter < itemSummariesArrayList.size();
                 itemsCounter = itemsCounter + 1
         ) {
-            LinkedHashMap<?, ?> itemMap = itemSummariesArrayList.get(0);
-
-            Optional<EbayItemEntity> retrievedEbayItem = Optional.of(new EbayItemEntity());
-            retrievedEbayItem.get()
-                    .setItemId((String) itemMap.get("itemId"));
-            retrievedEbayItem.get()
-                    .setTitle((String) itemMap.get("title"));
-
-            ArrayList<LinkedHashMap<?, ?>> itemCategoriesMapsArrayList = (ArrayList<LinkedHashMap<?, ?>>) itemMap.get("categories");
-            ArrayList<String> itemCategoriesNamesArrayList = new ArrayList<>();
-
-            for (
-                    int categoriesMapsCounter = 0;
-                    categoriesMapsCounter < itemCategoriesMapsArrayList.size();
-                    categoriesMapsCounter = categoriesMapsCounter + 1
-            ) {
-                LinkedHashMap<?, ?> itemAdditionalImageMap =
-                        itemCategoriesMapsArrayList.get(categoriesMapsCounter);
-
-                itemCategoriesNamesArrayList.add((String) itemAdditionalImageMap.get("categoryName"));
-            }
-            retrievedEbayItem.get()
-                            .setCategories(itemCategoriesNamesArrayList);
-
-            retrievedEbayItem.get()
-                    .setPrimaryImgUrl((String)
-                            (((LinkedHashMap<?, ?>)
-                                    itemMap.get("image")).get("imageUrl")));
-            retrievedEbayItem.get()
-                    .setPrice(Double.parseDouble((String)
-                            ((LinkedHashMap<?, ?>) itemMap.get("price")).get("value")));
-            retrievedEbayItem.get()
-                    .setPriceCurrency((String)
-                            ((LinkedHashMap<?, ?>) itemMap.get("price")).get("currency"));
-            retrievedEbayItem.get()
-                    .setBuyingOptions((List<String>) itemMap.get("buyingOptions"));
-            retrievedEbayItem.get()
-                    .setUrl((String) itemMap.get("itemHref"));
-            retrievedEbayItem.get()
-                    .setCondition((String) itemMap.get("condition"));
-            retrievedEbayItem.get()
-                    .setShippingCost(Double.parseDouble((String)
-                            ((LinkedHashMap<?, ?>)
-                                    ((LinkedHashMap<?, ?>)
-                                            ((ArrayList<?>)
-                                                    itemMap.get("shippingOptions")).get(0)).get("shippingCost")).get("value")));
-            retrievedEbayItem.get()
-                    .setShippingCostCurrency((String)
-                            ((LinkedHashMap<?, ?>)
-                                    ((ArrayList<LinkedHashMap<?, ?>>)
-                                            itemMap.get("shippingOptions")).get(0).get("shippingCost")).get("currency"));
-
-            ArrayList<LinkedHashMap<?, ?>> itemAdditionalImagesMapsArrayList =
-                    (ArrayList<LinkedHashMap<?, ?>>) itemMap.get("additionalImages");
-            ArrayList<String> itemAdditionalImagesArrayList = new ArrayList<>();
-
-            for (
-                    int additionalImagesMapsCounter = 0;
-                    additionalImagesMapsCounter < itemAdditionalImagesMapsArrayList.size();
-                    additionalImagesMapsCounter = additionalImagesMapsCounter + 1
-            ) {
-                LinkedHashMap<?, ?> itemAdditionalImageMap =
-                        itemAdditionalImagesMapsArrayList.get(additionalImagesMapsCounter);
-
-                itemAdditionalImagesArrayList.add((String) itemAdditionalImageMap.get("imageUrl"));
-            }
-
-            retrievedEbayItem.get().setAdditionalImgUrls(itemAdditionalImagesArrayList);
-
-            retrievedEbayItems.add(retrievedEbayItem);
+            EbayItemEntity retrievedEbayItem = new EbayItemEntity();
+            retrievedEbayItems.add(retrievedEbayItem.writeItemMap(itemSummariesArrayList.get(0)));
         }
 
         return retrievedEbayItems;
+    }
+
+    /**
+     * The method decides which retriever method to call.
+     *
+     * @param itemID An ID of the product
+     * @param productFieldgroupsEnabled Is request going to be
+     *                                  made using "PRODUCT" value of "fieldgroups"
+     *                                  parameter or not.
+     *                                  Usually, false value will be used
+     *                                  only while testing using eBay Sandbox environment.
+     * @return An EbayItemEntity object with written data from a request
+     */
+    @Cacheable(cacheNames = "EbayItemCache")
+    public EbayItemEntity retrieveEbayItemByItemId(String itemID, boolean productFieldgroupsEnabled) {
+        if (productFieldgroupsEnabled) {
+            return retrieveEbayItemByIdWithProductFieldgroups(itemID);
+        } else {
+            return retrieveEbayItemByIdWithCompactFieldgroups(itemID);
+        }
+    }
+
+    private EbayItemEntity retrieveEbayItemByIdWithProductFieldgroups(String itemID) {
+        String requestUrl = ebayGetItemApiUrl + "/" + itemID + "?fieldgroups=PRODUCT";
+
+        return getEbayItemEntity(requestUrl);
+    }
+
+    private EbayItemEntity retrieveEbayItemByIdWithCompactFieldgroups(String itemID) {
+        String requestUrl = ebayGetItemApiUrl + "/" + itemID + "?fieldgroups=COMPACT";
+
+        return getEbayItemEntity(requestUrl);
+    }
+
+    private EbayItemEntity getEbayItemEntity(String requestUrl) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(ebayToken);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<LinkedHashMap> response = restTemplate.exchange(
+                requestUrl,
+                HttpMethod.GET,
+                request,
+                LinkedHashMap.class
+        );
+
+        Map<?, ?> itemMap = response.getBody();
+        EbayItemEntity retrievedEbayItem = new EbayItemEntity();
+
+        assert itemMap != null;
+        return retrievedEbayItem.writeItemMap(itemMap);
     }
 }
