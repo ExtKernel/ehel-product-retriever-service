@@ -2,6 +2,10 @@
 ebayItemSummaryApiUrl: ${EBAY_BROWSE_API_ITEM_SUMMARY_URL}
 ebayGetItemApiUrl: ${EBAY_BROWSE_API_GET_ITEM_URL}
 ebayApiToken: ${EBAY_API_TOKEN}
+ebayClientId: ${EBAY_CLIENT_ID}
+ebayClientSecret: ${EBAY_CLIENT_SECRET}
+ebayUserAuthCodeUrl: ${EBAY_USER_AUTH_CODE_URL}
+ebayTokenUrl: ${EBAY_TOKEN_URL}
 
 eureka:
     client:

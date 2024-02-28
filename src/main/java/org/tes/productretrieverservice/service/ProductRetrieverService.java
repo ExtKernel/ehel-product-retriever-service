@@ -1,5 +1,7 @@
 package org.tes.productretrieverservice.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.*;
@@ -20,8 +22,9 @@ public class ProductRetrieverService {
     @Value("${ebayGetItemApiUrl}")
     private String ebayGetItemApiUrl;
 
-    @Value("${ebayApiToken}")
-    private String ebayToken;
+    @Qualifier("productionEbayTokenRefresher")
+    @Autowired
+    private EbayTokenRefresher tokenRefresher;
 
     /**
      * The method retrieves an eBay item based on given keyword using eBay RESTful API.
@@ -38,7 +41,7 @@ public class ProductRetrieverService {
     ) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(ebayToken);
+        headers.setBearerAuth(tokenRefresher.getAccessToken());
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(ebayItemSummaryApiUrl)
@@ -111,7 +114,7 @@ public class ProductRetrieverService {
     private EbayItemEntity getEbayItemEntity(String requestUrl) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(ebayToken);
+        headers.setBearerAuth(tokenRefresher.getAccessToken());
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = new RestTemplate();
