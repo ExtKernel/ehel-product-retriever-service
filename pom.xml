@@ -10,7 +10,7 @@
     </parent>
     <groupId>org.tes</groupId>
     <artifactId>product-retriever-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.7</version>
     <name>product-retriever-service</name>
     <description>product-retriever-service</description>
     <properties>
@@ -18,10 +18,10 @@
         <spring-cloud.version>2023.0.0</spring-cloud.version>
     </properties>
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-jpa</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
