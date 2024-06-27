@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import org.tes.productretrieverservice.exception.RestTemplateResponseErrorHandler;
 import org.tes.productretrieverservice.exception.WritingAuthCodeRequestBodyToJsonStringException;
 import org.tes.productretrieverservice.exception.WritingRefreshTokenRequestBodyToJsonStringException;
 import org.tes.productretrieverservice.model.AuthCode;
@@ -23,7 +21,6 @@ import java.util.Map;
 @Component
 public class EbayTokenRequestBuilder implements TokenRequestBuilder<AuthCode> {
     ObjectMapper objectMapper;
-    RestTemplateBuilder restTemplateBuilder;
 
     @Value("${ebayClientId}")
     private String clientId;
@@ -36,11 +33,9 @@ public class EbayTokenRequestBuilder implements TokenRequestBuilder<AuthCode> {
 
     @Autowired
     public EbayTokenRequestBuilder(
-            ObjectMapper objectMapper,
-            RestTemplateBuilder restTemplateBuilder
+            ObjectMapper objectMapper
     ) {
         this.objectMapper = objectMapper;
-        this.restTemplateBuilder = restTemplateBuilder;
     }
 
     @Override
@@ -63,7 +58,7 @@ public class EbayTokenRequestBuilder implements TokenRequestBuilder<AuthCode> {
         } catch (JsonProcessingException exception) {
             throw new WritingAuthCodeRequestBodyToJsonStringException(
                     "An exception occurred, while writing a request body,"
-                            + " containing an authorization code to a JSON string",
+                            + " containing an auth code to a JSON string",
                     exception
             );
         }
@@ -88,7 +83,7 @@ public class EbayTokenRequestBuilder implements TokenRequestBuilder<AuthCode> {
 
     @Override
     public RestTemplate getRestTemplate() {
-        return restTemplateBuilder.errorHandler(new RestTemplateResponseErrorHandler()).build();
+        return new RestTemplate();
     }
 
     private HttpHeaders buildHeaders() {

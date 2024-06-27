@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.tes.productretrieverservice.exception.NoRecordOfRefreshTokenException;
+import org.tes.productretrieverservice.exception.NoRecordOfAccessTokenException;
 import org.tes.productretrieverservice.model.AccessToken;
 import org.tes.productretrieverservice.model.AuthCode;
 import org.tes.productretrieverservice.model.RefreshToken;
@@ -55,7 +55,7 @@ public class GenericAccessTokenServiceTest {
     }
 
     @Test
-    void testFindLatest() throws NoRecordOfRefreshTokenException {
+    void testFindLatest() throws NoRecordOfAccessTokenException {
         // Given
         AccessToken expectedAccessToken = new AccessToken();
         when(tokenRepository.findFirstByOrderByCreationDateDesc()).thenReturn(Optional.of(expectedAccessToken));
@@ -74,7 +74,7 @@ public class GenericAccessTokenServiceTest {
         when(tokenRepository.findFirstByOrderByCreationDateDesc()).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(NoRecordOfRefreshTokenException.class, () -> service.findLatest());
+        assertThrows(NoRecordOfAccessTokenException.class, () -> service.findLatest());
         verify(tokenRepository).findFirstByOrderByCreationDateDesc();
     }
 

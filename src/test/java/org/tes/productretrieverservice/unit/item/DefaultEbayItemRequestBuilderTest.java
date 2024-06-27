@@ -37,9 +37,7 @@ public class DefaultEbayItemRequestBuilderTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(restTemplateBuilder.errorHandler(any())).thenReturn(restTemplateBuilder);
-        when(restTemplateBuilder.build()).thenReturn(restTemplate);
-        requestBuilder = new DefaultEbayItemRequestBuilder(userService, restTemplateBuilder);
+        requestBuilder = new DefaultEbayItemRequestBuilder(userService);
     }
 
     @Test
@@ -168,8 +166,5 @@ public class DefaultEbayItemRequestBuilderTest {
 
         // Then
         assertNotNull(result);
-        assertEquals(restTemplate, result);
-        verify(restTemplateBuilder).errorHandler(any());
-        verify(restTemplateBuilder).build();
     }
 }

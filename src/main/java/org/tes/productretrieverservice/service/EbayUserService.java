@@ -48,7 +48,7 @@ public class EbayUserService
 
     @Override
     public RefreshToken generateRefreshToken(Long userId) {
-        return refreshTokenService.generate(authCodeService.findLatest());
+        return refreshTokenService.generate(authCodeService.getValid());
     }
 
     @Override
@@ -83,14 +83,12 @@ public class EbayUserService
             Date refreshTokenExpirationDate = Date.from(Instant.ofEpochMilli(
                     refreshToken.getCreationDate().getTime() + refreshToken.getExpiresIn()));
 
-            if (!refreshTokenExpirationDate.after(new Date())) {
-                return saveRefreshToken(
+            if (!refreshTokenExpirationDate.after(new Date())) return saveRefreshToken(
                         userId,
                         Optional.of(generateRefreshToken(userId))
-                );
-            } else {
-                return refreshToken;
-            }
+            );
+
+            return refreshToken;
         } catch (NoRecordOfRefreshTokenException exception) {
             return saveRefreshToken(
                     userId,

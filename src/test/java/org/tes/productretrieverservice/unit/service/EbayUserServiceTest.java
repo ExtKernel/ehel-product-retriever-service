@@ -73,7 +73,7 @@ public class EbayUserServiceTest {
         AuthCode authCode = new AuthCode();
         RefreshToken expectedRefreshToken = new RefreshToken();
 
-        when(authCodeService.findLatest()).thenReturn(authCode);
+        when(authCodeService.getValid()).thenReturn(authCode);
         when(refreshTokenService.generate(authCode)).thenReturn(expectedRefreshToken);
 
         // When
@@ -81,7 +81,7 @@ public class EbayUserServiceTest {
 
         // Then
         assertEquals(expectedRefreshToken, result);
-        verify(authCodeService).findLatest();
+        verify(authCodeService).getValid();
         verify(refreshTokenService).generate(authCode);
     }
 
@@ -149,7 +149,7 @@ public class EbayUserServiceTest {
         user.setRefreshTokens(new ArrayList<>());
 
         when(refreshTokenService.findLatest()).thenReturn(oldToken);
-        when(authCodeService.findLatest()).thenReturn(new AuthCode());
+        when(authCodeService.getValid()).thenReturn(new AuthCode());
         when(refreshTokenService.generate(any())).thenReturn(newToken);
         when(repository.findById(userId)).thenReturn(Optional.of(user));
         when(repository.save(user)).thenReturn(user);
@@ -173,7 +173,7 @@ public class EbayUserServiceTest {
         user.setRefreshTokens(new ArrayList<>());
 
         when(refreshTokenService.findLatest()).thenThrow(new NoRecordOfRefreshTokenException("no-record"));
-        when(authCodeService.findLatest()).thenReturn(new AuthCode());
+        when(authCodeService.getValid()).thenReturn(new AuthCode());
         when(refreshTokenService.generate(any())).thenReturn(newToken);
         when(repository.findById(userId)).thenReturn(Optional.of(user));
         when(repository.save(user)).thenReturn(user);

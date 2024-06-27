@@ -3,14 +3,12 @@ package org.tes.productretrieverservice.item;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.tes.productretrieverservice.exception.RestTemplateResponseErrorHandler;
 import org.tes.productretrieverservice.model.EbayUser;
 import org.tes.productretrieverservice.service.Oauth2UserService;
 
@@ -19,15 +17,12 @@ import java.util.List;
 @Component
 public class DefaultEbayItemRequestBuilder implements EbayItemRequestBuilder {
     private final Oauth2UserService<EbayUser, Long> userService;
-    private final RestTemplateBuilder restTemplateBuilder;
 
     @Autowired
     public DefaultEbayItemRequestBuilder(
-            Oauth2UserService<EbayUser, Long> userService,
-            RestTemplateBuilder restTemplateBuilder
+            Oauth2UserService<EbayUser, Long> userService
     ) {
         this.userService = userService;
-        this.restTemplateBuilder = restTemplateBuilder;
     }
 
     @Override
@@ -119,7 +114,7 @@ public class DefaultEbayItemRequestBuilder implements EbayItemRequestBuilder {
 
     @Override
     public RestTemplate getRestTemplate() {
-        return restTemplateBuilder.errorHandler(new RestTemplateResponseErrorHandler()).build();
+        return new RestTemplate();
     }
 
     /**

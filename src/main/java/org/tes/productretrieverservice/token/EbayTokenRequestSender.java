@@ -52,7 +52,8 @@ public class EbayTokenRequestSender implements TokenRequestSender<AuthCode> {
             ).getBody());
         } catch (JsonProcessingException exception) {
             throw new RefreshTokenJsonReadingException(
-                    "An exception occurred while reading JSON received from the request"
+                    "An exception occurred while reading"
+                            + " an eBay refresh token JSON received from the request"
                             + " to retrieve a refresh token",
                     exception
             );
@@ -71,7 +72,8 @@ public class EbayTokenRequestSender implements TokenRequestSender<AuthCode> {
             ).getBody());
         } catch (JsonProcessingException exception) {
             throw new AccessTokenJsonReadingException(
-                    "An exception occurred while reading JSON received from the request"
+                    "An exception occurred while reading"
+                            + " an eBay access token JSON received from the request"
                             + " to retrieve a access token",
                     exception
             );
