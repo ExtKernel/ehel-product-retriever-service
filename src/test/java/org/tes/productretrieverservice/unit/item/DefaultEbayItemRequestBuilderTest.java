@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 import org.tes.productretrieverservice.item.DefaultEbayItemRequestBuilder;
 import org.tes.productretrieverservice.model.AccessToken;
-import org.tes.productretrieverservice.model.AuthCode;
 import org.tes.productretrieverservice.model.EbayUser;
 import org.tes.productretrieverservice.service.Oauth2UserService;
 
@@ -25,7 +24,7 @@ import static org.mockito.Mockito.*;
 public class DefaultEbayItemRequestBuilderTest {
 
     @Mock
-    private Oauth2UserService<EbayUser, Long, AuthCode> userService;
+    private Oauth2UserService<EbayUser, Long> userService;
 
     @Mock
     private RestTemplateBuilder restTemplateBuilder;
@@ -48,7 +47,7 @@ public class DefaultEbayItemRequestBuilderTest {
         // Given
         Long userId = 1L;
         AccessToken accessToken = new AccessToken();
-        accessToken.setAccessToken("test-token");
+        accessToken.setToken("test-token");
         when(userService.generateAccessToken(userId)).thenReturn(accessToken);
 
         // When
@@ -66,7 +65,7 @@ public class DefaultEbayItemRequestBuilderTest {
         // Given
         Long userId = 1L;
         AccessToken accessToken = new AccessToken();
-        accessToken.setAccessToken("test-token");
+        accessToken.setToken("test-token");
         when(userService.generateAccessToken(userId)).thenReturn(accessToken);
 
         // When

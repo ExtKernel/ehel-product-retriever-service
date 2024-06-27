@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.tes.productretrieverservice.exception.RestTemplateResponseErrorHandler;
-import org.tes.productretrieverservice.model.AuthCode;
 import org.tes.productretrieverservice.model.EbayUser;
 import org.tes.productretrieverservice.service.Oauth2UserService;
 
@@ -19,12 +18,12 @@ import java.util.List;
 
 @Component
 public class DefaultEbayItemRequestBuilder implements EbayItemRequestBuilder {
-    private final Oauth2UserService<EbayUser, Long, AuthCode> userService;
+    private final Oauth2UserService<EbayUser, Long> userService;
     private final RestTemplateBuilder restTemplateBuilder;
 
     @Autowired
     public DefaultEbayItemRequestBuilder(
-            Oauth2UserService<EbayUser, Long, AuthCode> userService,
+            Oauth2UserService<EbayUser, Long> userService,
             RestTemplateBuilder restTemplateBuilder
     ) {
         this.userService = userService;
@@ -43,7 +42,7 @@ public class DefaultEbayItemRequestBuilder implements EbayItemRequestBuilder {
     public HttpEntity buildAuthOnlyHttpRequestEntity(Long userId) {
         return new HttpEntity(
                 buildEmptyRequestBody(),
-                buildHeaders(userService.generateAccessToken(userId).getAccessToken())
+                buildHeaders(userService.generateAccessToken(userId).getToken())
         );
     }
 
