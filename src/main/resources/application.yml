@@ -3,6 +3,7 @@ ebayItemSummaryApiUrl: ${EBAY_BROWSE_API_ITEM_SUMMARY_URL}
 ebayGetItemApiUrl: ${EBAY_BROWSE_API_GET_ITEM_URL}
 accessTokenRetrievingUri: ${ACCESS_TOKEN_RETRIEVE_URI}
 refreshTokenRetrievingUri: ${REFRESH_TOKEN_RETRIEVE_URI}
+principalRoleName: ${PRINCIPAL_ROLE_NAME}
 
 eureka:
     client:

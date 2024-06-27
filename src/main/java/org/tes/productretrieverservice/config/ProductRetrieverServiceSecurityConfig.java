@@ -1,6 +1,7 @@
 package org.tes.productretrieverservice.config;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -18,12 +19,16 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 @EnableMethodSecurity
 @EnableWebSecurity
 @Configuration
 public class ProductRetrieverServiceSecurityConfig {
+
+    @Value("${principalRoleName}")
+    private String principalRoleName;
 
     @Component
     static class KeycloakAuthoritiesConverter implements Converter<Jwt, List<SimpleGrantedAuthority>> {
@@ -64,8 +69,7 @@ public class ProductRetrieverServiceSecurityConfig {
         }));
 
         http.authorizeHttpRequests(requests -> requests
-                .requestMatchers("/generic/secured").hasAuthority("administrator")
-                .requestMatchers("/laptop/secured").hasAuthority("administrator")
+                .requestMatchers("/secured/**").hasAuthority(principalRoleName)
                 .anyRequest().permitAll());
 
         return http.build();
