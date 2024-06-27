@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.tes.productretrieverservice.exception.ModelIsNullException;
 import org.tes.productretrieverservice.exception.ModelNotFoundException;
-import org.tes.productretrieverservice.model.AccessToken;
 
 import java.util.List;
 import java.util.Optional;

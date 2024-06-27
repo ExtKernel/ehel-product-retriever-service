@@ -1,7 +1,6 @@
 package org.tes.productretrieverservice.token;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.tes.productretrieverservice.model.AuthCode;
 import org.tes.productretrieverservice.model.AuthModel;
 import org.tes.productretrieverservice.model.RefreshToken;
 
