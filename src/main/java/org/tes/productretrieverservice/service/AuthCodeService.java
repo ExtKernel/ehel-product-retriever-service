@@ -47,6 +47,7 @@ public class AuthCodeService extends GenericCrudService<AuthCode, Long> {
 
     /**
      * Retrieves the latest {@link AuthCode} object saved in the database.
+     * Which might be expired!
      *
      * @return the latest {@link AuthCode} object saved in the database.
      * @throws NoRecordOfAuthCodeException if there are no {@link AuthCode} objects in the database.

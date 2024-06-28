@@ -13,15 +13,15 @@ import org.tes.productretrieverservice.model.RefreshToken;
 public interface TokenRequestSender<AuthModelType extends AuthModel> {
 
     /**
-     * Sends a request to get a JSON representation of a refresh token.
+     * Sends a request to get a {@link JsonNode} representation of a refresh token.
      *
-     * @param authCode an authorization code.
+     * @param authModel an object that will be used for the refresh token retrieval.
      * @return a JSON node containing the refresh token.
      */
-    JsonNode sendGetRefreshTokenRequest(AuthModelType authCode);
+    JsonNode sendGetRefreshTokenRequest(AuthModelType authModel);
 
     /**
-     * Sends a request to get a JSON representation of an access token.
+     * Sends a request to get a {@link JsonNode} representation of an access token.
      *
      * @param refreshToken a refresh token to use for access token retrieval.
      * @return a JSON node containing the access token.
