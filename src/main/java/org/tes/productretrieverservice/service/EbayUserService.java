@@ -21,10 +21,10 @@ import java.util.Optional;
 public class EbayUserService
         extends GenericCrudService<EbayUser, Long>
         implements Oauth2UserService<EbayUser, Long> {
-    AuthCodeService authCodeService;
-    TokenManager<AuthCode> tokenManager;
-    TokenService<RefreshToken, AuthCode> refreshTokenService;
-    TokenService<AccessToken, RefreshToken> accessTokenService;
+    private final AuthCodeService authCodeService;
+    private final TokenManager<AuthCode> tokenManager;
+    private final TokenService<RefreshToken, AuthCode> refreshTokenService;
+    private final TokenService<AccessToken, RefreshToken> accessTokenService;
 
     @Autowired
     public EbayUserService(

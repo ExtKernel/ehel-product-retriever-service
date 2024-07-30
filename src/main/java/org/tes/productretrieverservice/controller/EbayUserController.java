@@ -11,7 +11,7 @@ import org.tes.productretrieverservice.service.Oauth2UserService;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/user")
+@RequestMapping("/secured/user")
 @RestController
 public class EbayUserController {
     private final Oauth2UserService<EbayUser, Long> service;

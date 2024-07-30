@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Service
 public class AuthCodeService extends GenericCrudService<AuthCode, Long> {
-    AuthCodeRepository repository;
+    private final AuthCodeRepository repository;
 
     @Autowired
     public AuthCodeService(

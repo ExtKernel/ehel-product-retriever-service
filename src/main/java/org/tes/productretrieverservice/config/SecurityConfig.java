@@ -25,7 +25,7 @@ import java.util.Map;
 @EnableMethodSecurity
 @EnableWebSecurity
 @Configuration
-public class ProductRetrieverServiceSecurityConfig {
+public class SecurityConfig {
 
     @Value("${principalRoleName}")
     private String principalRoleName;
