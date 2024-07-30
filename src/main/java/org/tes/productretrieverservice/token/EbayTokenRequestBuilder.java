@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Component
 public class EbayTokenRequestBuilder implements TokenRequestBuilder<AuthCode> {
-    ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     @Value("${ebayClientId}")
     private String clientId;
@@ -32,9 +32,7 @@ public class EbayTokenRequestBuilder implements TokenRequestBuilder<AuthCode> {
     private String redirectUri;
 
     @Autowired
-    public EbayTokenRequestBuilder(
-            ObjectMapper objectMapper
-    ) {
+    public EbayTokenRequestBuilder(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 

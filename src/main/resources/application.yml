@@ -1,22 +1,22 @@
 # Variables to inject into Java variables
 ebayItemSummaryApiUrl: ${EBAY_BROWSE_API_ITEM_SUMMARY_URL}
 ebayGetItemApiUrl: ${EBAY_BROWSE_API_GET_ITEM_URL}
-accessTokenRetrievingUri: ${ACCESS_TOKEN_RETRIEVE_URI}
-refreshTokenRetrievingUri: ${REFRESH_TOKEN_RETRIEVE_URI}
+accessTokenRetrievingUri: ${ACCESS_TOKEN_RETRIEVE_URL}
+refreshTokenRetrievingUri: ${REFRESH_TOKEN_RETRIEVE_URL}
 principalRoleName: ${PRINCIPAL_ROLE_NAME}
 
 eureka:
     client:
         service-url:
-            default-zone: ${EUREKA_URI:http:localhost:8761/eureka}
+            default-zone: ${EUREKA_URI:http://localhost:8761/eureka}
 logging:
     level:
         root: warn
 server:
-    port: ${SERVER_PORT}
+    port: ${SERVER_PORT:8000}
 spring:
     application:
-        name: product-service
+        name: product-retriever-service
     cloud:
         loadbalancer:
             cache:
@@ -32,8 +32,8 @@ spring:
         oauth2:
             resourceserver:
                 jwt:
-                    issuer-uri: http://${KEYCLOAK_BASE_URI}/realms/${REALM}
+                    issuer-uri: ${OAUTH2_PROVIDER_ISSUER_URL}
                 opaquetoken:
-                    client-id: product-service
-                    client-secret: ${CLIENT_SECRET}
-                    introspection-uri: http://${KEYCLOAK_BASE_URI}/realms/${REALM}/protocol/openid-connect/token/introspect
+                    client-id: ${OAUTH2_PROVIDER_CLIENT_ID}
+                    client-secret: ${OAUTH2_PROVIDER_CLIENT_SECRET}
+                    introspection-uri: ${OAUTH2_PROVIDER_INTROSPECTION_URL}
