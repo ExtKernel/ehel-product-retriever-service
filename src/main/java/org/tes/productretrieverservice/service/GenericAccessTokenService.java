@@ -39,8 +39,8 @@ public abstract class GenericAccessTokenService
     public AccessToken findLatest() throws AccessTokenIsNullException {
         try {
             return tokenRepository.findFirstByOrderByCreationDateDesc()
-                    .orElseThrow(() -> new AccessTokenIsNullException("The refresh token is null"));
-        } catch (RefreshTokenIsNullException exception) {
+                    .orElseThrow(() -> new AccessTokenIsNullException("The access token is null"));
+        } catch (AccessTokenIsNullException exception) {
             throw new NoRecordOfAccessTokenException(
                     "There is no record of access tokens in the database: " + exception.getMessage(),
                     exception
