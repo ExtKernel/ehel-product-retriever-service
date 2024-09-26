@@ -4,16 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tes.productretrieverservice.model.AccessToken;
 import org.tes.productretrieverservice.model.AuthCode;
+import org.tes.productretrieverservice.model.EbayUser;
 import org.tes.productretrieverservice.model.RefreshToken;
 
 @Component
-public class EbayTokenManager implements TokenManager<AuthCode> {
-    private final TokenRequestSender requestSender;
+public class EbayTokenManager implements TokenManager<EbayUser, AuthCode> {
+    private final TokenRequestSender<EbayUser, AuthCode> requestSender;
     private final TokenJsonObjectMapper jsonObjectMapper;
 
     @Autowired
     public EbayTokenManager(
-            TokenRequestSender requestSender,
+            TokenRequestSender<EbayUser, AuthCode> requestSender,
             TokenJsonObjectMapper jsonObjectMapper
     ) {
         this.requestSender = requestSender;
@@ -21,14 +22,28 @@ public class EbayTokenManager implements TokenManager<AuthCode> {
     }
 
     @Override
-    public RefreshToken getRefreshToken(AuthCode authCode) {
+    public RefreshToken getRefreshToken(
+            EbayUser user,
+            AuthCode authCode
+    ) {
         return jsonObjectMapper.mapUserRefreshTokenJsonNodeToUserRefreshToken(
-                requestSender.sendGetRefreshTokenRequest(authCode));
+                requestSender.sendGetRefreshTokenRequest(
+                        user,
+                        authCode
+                )
+        );
     }
 
     @Override
-    public AccessToken getAccessToken(RefreshToken refreshToken) {
+    public AccessToken getAccessToken(
+            EbayUser user,
+            RefreshToken refreshToken
+    ) {
         return jsonObjectMapper.mapUserAccessTokenJsonNodeToUserAccessToken(
-                requestSender.sendGetAccessTokenRequest(refreshToken));
+                requestSender.sendGetAccessTokenRequest(
+                        user,
+                        refreshToken
+                )
+        );
     }
 }

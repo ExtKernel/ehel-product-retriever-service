@@ -25,6 +25,9 @@ public class EbayUser extends Oauth2User {
     @Column(name = "client_secret")
     private String clientSecret;
 
+    @Column(name = "redirect_url")
+    private String redirectUrl;
+
     @OneToMany
     @ToString.Exclude
     private List<AuthCode> authCodes;

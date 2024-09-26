@@ -4,23 +4,29 @@ import org.springframework.http.HttpEntity;
 import org.springframework.web.client.RestTemplate;
 import org.tes.productretrieverservice.model.AuthModel;
 import org.tes.productretrieverservice.model.RefreshToken;
+import org.tes.productretrieverservice.model.User;
 
 /**
  * An interface to send token related requests.
  *
  * @param <AuthModelType> the type of the {@link AuthModel} object
  *                       that will be used for {@link RefreshToken} retrieval.
+ * @param <UserType> the type of user to be used while building a request.
  */
-public interface TokenRequestBuilder<AuthModelType extends AuthModel> {
+public interface TokenRequestBuilder<UserType extends User, AuthModelType extends AuthModel> {
 
     /**
      * Builds an {@link HttpEntity}
      * for {@link org.tes.productretrieverservice.model.Token}-related requests.
      *
+     * @param user a user which holds the necessary data for request building
      * @param requestBody a request body to include in the {@link HttpEntity}.
      * @return the {@link HttpEntity}.
      */
-    HttpEntity buildHttpRequestEntity(String requestBody);
+    HttpEntity buildHttpRequestEntity(
+            UserType user,
+            String requestBody
+    );
 
     /**
      * Builds a request body, containing a {@link AuthModelType}

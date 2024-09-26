@@ -3,7 +3,6 @@ package org.tes.productretrieverservice.service;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.tes.productretrieverservice.exception.AccessTokenIsNullException;
 import org.tes.productretrieverservice.exception.NoRecordOfAccessTokenException;
-import org.tes.productretrieverservice.exception.RefreshTokenIsNullException;
 import org.tes.productretrieverservice.model.AccessToken;
 import org.tes.productretrieverservice.model.AuthCode;
 import org.tes.productretrieverservice.model.RefreshToken;

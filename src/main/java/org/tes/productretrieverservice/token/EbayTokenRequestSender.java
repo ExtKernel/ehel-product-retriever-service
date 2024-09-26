@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import org.tes.productretrieverservice.exception.AccessTokenJsonReadingException;
 import org.tes.productretrieverservice.exception.RefreshTokenJsonReadingException;
 import org.tes.productretrieverservice.model.AuthCode;
+import org.tes.productretrieverservice.model.EbayUser;
 import org.tes.productretrieverservice.model.RefreshToken;
 
 /**
@@ -18,10 +19,10 @@ import org.tes.productretrieverservice.model.RefreshToken;
  * Sends specific to the eBay API token related requests.
  */
 @Component
-public class EbayTokenRequestSender implements TokenRequestSender<AuthCode> {
+public class EbayTokenRequestSender implements TokenRequestSender<EbayUser, AuthCode> {
     ObjectMapper objectMapper;
     RestTemplate restTemplate;
-    TokenRequestBuilder<AuthCode> requestBuilder;
+    TokenRequestBuilder<EbayUser, AuthCode> requestBuilder;
 
     @Value("${ebayTokenUrl}")
     private String ebayTokenUrl;
@@ -29,7 +30,7 @@ public class EbayTokenRequestSender implements TokenRequestSender<AuthCode> {
     @Autowired
     public EbayTokenRequestSender(
             ObjectMapper objectMapper,
-            TokenRequestBuilder<AuthCode> requestBuilder
+            TokenRequestBuilder<EbayUser, AuthCode> requestBuilder
     ) {
         this.objectMapper = objectMapper;
         this.restTemplate = requestBuilder.getRestTemplate();
@@ -41,13 +42,18 @@ public class EbayTokenRequestSender implements TokenRequestSender<AuthCode> {
      *         The access token is supposed to be ignored.
      */
     @Override
-    public JsonNode sendGetRefreshTokenRequest(AuthCode authCode) {
+    public JsonNode sendGetRefreshTokenRequest(
+            EbayUser user,
+            AuthCode authCode
+    ) {
         try {
             return objectMapper.readTree(restTemplate.exchange(
                     ebayTokenUrl,
                     HttpMethod.POST,
                     requestBuilder.buildHttpRequestEntity(
-                            requestBuilder.buildAuthModelRequestBody(authCode)),
+                            user,
+                            requestBuilder.buildAuthModelRequestBody(authCode)
+                    ),
                     String.class
             ).getBody());
         } catch (JsonProcessingException exception) {
@@ -61,13 +67,18 @@ public class EbayTokenRequestSender implements TokenRequestSender<AuthCode> {
     }
 
     @Override
-    public JsonNode sendGetAccessTokenRequest(RefreshToken refreshToken) {
+    public JsonNode sendGetAccessTokenRequest(
+            EbayUser user,
+            RefreshToken refreshToken
+    ) {
         try {
             return objectMapper.readTree(restTemplate.exchange(
                     ebayTokenUrl,
                     HttpMethod.POST,
                     requestBuilder.buildHttpRequestEntity(
-                            requestBuilder.buildRefreshTokenRequestBody(refreshToken)),
+                            user,
+                            requestBuilder.buildRefreshTokenRequestBody(refreshToken)
+                    ),
                     String.class
             ).getBody());
         } catch (JsonProcessingException exception) {

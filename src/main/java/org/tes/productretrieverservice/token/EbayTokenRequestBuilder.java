@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import org.tes.productretrieverservice.exception.WritingAuthCodeRequestBodyToJsonStringException;
 import org.tes.productretrieverservice.exception.WritingRefreshTokenRequestBodyToJsonStringException;
 import org.tes.productretrieverservice.model.AuthCode;
+import org.tes.productretrieverservice.model.EbayUser;
 import org.tes.productretrieverservice.model.RefreshToken;
 
 import java.util.Base64;
@@ -19,14 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class EbayTokenRequestBuilder implements TokenRequestBuilder<AuthCode> {
+public class EbayTokenRequestBuilder implements TokenRequestBuilder<EbayUser, AuthCode> {
     private final ObjectMapper objectMapper;
-
-    @Value("${ebayClientId}")
-    private String clientId;
-
-    @Value("${ebayClientSecret}")
-    private String clientSecret;
 
     @Value("${EBAY_CLIENT_REDIRECT_URI}")
     private String redirectUri;
@@ -36,11 +31,20 @@ public class EbayTokenRequestBuilder implements TokenRequestBuilder<AuthCode> {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * @param user a user which holds the eBay client data.
+     */
     @Override
-    public HttpEntity<String> buildHttpRequestEntity(String requestBody) {
+    public HttpEntity<String> buildHttpRequestEntity(
+            EbayUser user,
+            String requestBody
+    ) {
         return new HttpEntity<>(
                 requestBody,
-                buildHeaders()
+                buildHeaders(
+                        user.getClientId(),
+                        user.getClientSecret()
+                )
         );
     }
 
@@ -84,7 +88,10 @@ public class EbayTokenRequestBuilder implements TokenRequestBuilder<AuthCode> {
         return new RestTemplate();
     }
 
-    private HttpHeaders buildHeaders() {
+    private HttpHeaders buildHeaders(
+            String clientId,
+            String clientSecret
+    ) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(

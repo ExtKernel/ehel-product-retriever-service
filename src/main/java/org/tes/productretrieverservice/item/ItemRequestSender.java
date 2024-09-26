@@ -9,9 +9,9 @@ import org.tes.productretrieverservice.model.User;
  * @param <ItemId> the type of identifier that the item uses.
  *                        Could be just a String ID or literally anything else,
  *                        based on the object.
- * @param <UserT> the type of user to be used while building a request.
+ * @param <UserType> the type of user to be used while building a request.
  */
-public interface ItemRequestSender<ItemId, UserT extends User> {
+public interface ItemRequestSender<ItemId, UserType extends User> {
 
     /**
      * Sends a request to get an item.
@@ -21,7 +21,7 @@ public interface ItemRequestSender<ItemId, UserT extends User> {
      * @return a JSON node of the item.
      */
     JsonNode sendGetItemRequest(
-            UserT user,
+            UserType user,
             ItemId ItemId
     );
 }

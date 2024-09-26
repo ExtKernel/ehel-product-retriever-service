@@ -22,6 +22,7 @@ CREATE TABLE ebay_user
     username      VARCHAR(255),
     client_id     VARCHAR(255),
     client_secret VARCHAR(255),
+    redirect_url  VARCHAR(255),
     CONSTRAINT pk_ebayuser PRIMARY KEY (id)
 );
 
