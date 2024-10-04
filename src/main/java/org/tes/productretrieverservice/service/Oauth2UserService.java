@@ -10,15 +10,15 @@ import java.util.Optional;
 /**
  * An interface for managing {@link Oauth2User} objects.
  *
- * @param <User> the type of the {@link Oauth2User}.
+ * @param <UserType> the type of the {@link Oauth2User}.
  * @param <UserId> the type of the id of the {@link Oauth2User}.
  */
-public interface Oauth2UserService<User extends Oauth2User, UserId> extends CrudService<User, UserId> {
+public interface Oauth2UserService<UserType extends Oauth2User, UserId> extends CrudService<UserType, UserId> {
 
     /**
      * Generates an {@link AccessToken}.
      *
-     * @param userId the id of the {@link User}, which will be used while generating.
+     * @param userId the id of the {@link UserType}, which will be used while generating.
      * @return the {@link AccessToken}.
      */
     AccessToken generateAccessToken(UserId userId);
@@ -26,7 +26,7 @@ public interface Oauth2UserService<User extends Oauth2User, UserId> extends Crud
     /**
      * Generates a {@link RefreshToken}.
      *
-     * @param userId the id of the {@link User}, which will be used while generating.
+     * @param userId the id of the {@link UserType}, which will be used while generating.
      * @return the {@link RefreshToken}.
      */
     RefreshToken generateRefreshToken(UserId userId);
@@ -34,7 +34,7 @@ public interface Oauth2UserService<User extends Oauth2User, UserId> extends Crud
     /**
      * Saves a {@link RefreshToken}.
      *
-     * @param userId the id of the {@link User}, which will hold the token.
+     * @param userId the id of the {@link UserType}, which will hold the token.
      * @param optionalRefreshToken an {@link Optional} representation of the {@link RefreshToken}.
      * @return the {@link RefreshToken}.
      */
@@ -47,15 +47,15 @@ public interface Oauth2UserService<User extends Oauth2User, UserId> extends Crud
      * Get a {@link RefreshToken}, which will be checked for validity.
      * If expired, a new one will be generated.
      *
-     * @param userId the id of the {@link User}, which will hold the token.
+     * @param userId the id of the {@link UserType}, which will hold the token.
      * @return a valid {@link RefreshToken}.
      */
     RefreshToken getValidRefreshToken(UserId userId);
 
     /**
-     * Get a list of {@link RefreshToken}, saved in an {@link User} object.
+     * Get a list of {@link RefreshToken}, saved in an {@link UserType} object.
      *
-     * @param userId the id of the {@link User}, which will hold the token.
+     * @param userId the id of the {@link UserType}, which will hold the token.
      * @return a list of {@link RefreshToken}.
      */
     List<RefreshToken> getRefreshTokens(UserId userId);

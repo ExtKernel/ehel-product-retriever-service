@@ -8,24 +8,24 @@ import java.util.List;
 public interface EbayItemManager extends ItemManager<EbayItem, String, EbayUser> {
 
     @Override
-    EbayItem getItem(
+    List<EbayItem> getItems(
             EbayUser user,
             String keyword
     );
 
-    EbayItem getItem(
+    List<EbayItem> getItems(
             EbayUser user,
             String keyword,
             String sort
     );
 
-    EbayItem getItem(
+    List<EbayItem> getItems(
             EbayUser user,
             String keyword,
             List<String> filters
     );
 
-    EbayItem getItem(
+    List<EbayItem> getItems(
             EbayUser user,
             String keyword,
             String sort,

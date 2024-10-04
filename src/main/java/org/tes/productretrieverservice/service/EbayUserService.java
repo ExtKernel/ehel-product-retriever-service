@@ -9,7 +9,6 @@ import org.tes.productretrieverservice.model.AuthCode;
 import org.tes.productretrieverservice.model.EbayUser;
 import org.tes.productretrieverservice.model.RefreshToken;
 import org.tes.productretrieverservice.repository.EbayUserRepository;
-import org.tes.productretrieverservice.token.TokenManager;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -22,33 +21,36 @@ public class EbayUserService
         extends GenericCrudService<EbayUser, Long>
         implements Oauth2UserService<EbayUser, Long> {
     private final AuthCodeService authCodeService;
-    private final TokenManager<AuthCode> tokenManager;
-    private final TokenService<RefreshToken, AuthCode> refreshTokenService;
-    private final TokenService<AccessToken, RefreshToken> accessTokenService;
+    private final TokenService<EbayUser, RefreshToken, AuthCode> refreshTokenService;
+    private final TokenService<EbayUser, AccessToken, RefreshToken> accessTokenService;
 
     @Autowired
     public EbayUserService(
             EbayUserRepository repository,
             AuthCodeService authCodeService,
-            TokenManager<AuthCode> tokenManager,
-            TokenService<RefreshToken, AuthCode> refreshTokenService,
-            TokenService<AccessToken, RefreshToken> accessTokenService
+            TokenService<EbayUser, RefreshToken, AuthCode> refreshTokenService,
+            TokenService<EbayUser, AccessToken, RefreshToken> accessTokenService
     ) {
         super(repository);
         this.authCodeService = authCodeService;
-        this.tokenManager = tokenManager;
         this.refreshTokenService = refreshTokenService;
         this.accessTokenService = accessTokenService;
     }
 
     @Override
     public AccessToken generateAccessToken(Long userId) {
-        return accessTokenService.generate(getValidRefreshToken(userId));
+        return accessTokenService.generate(
+                findById(userId),
+                getValidRefreshToken(userId)
+        );
     }
 
     @Override
     public RefreshToken generateRefreshToken(Long userId) {
-        return refreshTokenService.generate(authCodeService.getValid());
+        return refreshTokenService.generate(
+                findById(userId),
+                authCodeService.getValid()
+        );
     }
 
     @Override
@@ -56,7 +58,8 @@ public class EbayUserService
             Long userId,
             Optional<RefreshToken> optionalRefreshToken
     ) {
-        RefreshToken refreshToken = optionalRefreshToken.orElseThrow(() -> new RefreshTokenIsNullException("The refresh token is null"));
+        RefreshToken refreshToken = optionalRefreshToken
+                .orElseThrow(() -> new RefreshTokenIsNullException("The refresh token is null"));
 
         // add the token to the list, so old tokens are not deleted
         List<RefreshToken> refreshTokens = getRefreshTokens(userId);
@@ -82,7 +85,6 @@ public class EbayUserService
             // if the resulting date-time is before the current moment, the token is expired
             Date refreshTokenExpirationDate = Date.from(Instant.ofEpochMilli(
                     refreshToken.getCreationDate().getTime() + refreshToken.getExpiresIn()));
-
             if (!refreshTokenExpirationDate.after(new Date())) return saveRefreshToken(
                         userId,
                         Optional.of(generateRefreshToken(userId))

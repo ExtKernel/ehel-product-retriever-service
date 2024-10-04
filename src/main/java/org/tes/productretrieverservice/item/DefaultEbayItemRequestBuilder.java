@@ -1,7 +1,5 @@
 package org.tes.productretrieverservice.item;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +34,7 @@ public class DefaultEbayItemRequestBuilder implements EbayItemRequestBuilder {
     @Override
     public HttpEntity buildAuthOnlyHttpRequestEntity(Long userId) {
         return new HttpEntity(
-                buildEmptyRequestBody(),
+                null,
                 buildHeaders(userService.generateAccessToken(userId).getToken())
         );
     }
@@ -129,10 +127,5 @@ public class DefaultEbayItemRequestBuilder implements EbayItemRequestBuilder {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         return headers;
-    }
-
-    private ObjectNode buildEmptyRequestBody() {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.createObjectNode();
     }
 }

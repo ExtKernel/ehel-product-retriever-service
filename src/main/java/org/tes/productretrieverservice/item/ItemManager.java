@@ -1,5 +1,9 @@
 package org.tes.productretrieverservice.item;
 
+import org.tes.productretrieverservice.model.User;
+
+import java.util.List;
+
 /**
  * An interface to manage items in the context of requests.
  *
@@ -7,9 +11,9 @@ package org.tes.productretrieverservice.item;
  * @param <ItemId> the type of identifier that the item uses.
  *  *                        Could be just a String ID or literally anything else,
  *  *                        based on the object.
- * @param <User> the type of user to use while building requests.
+ * @param <UserType> the type of user to use while building requests.
  */
-public interface ItemManager<Item, ItemId, User extends org.tes.productretrieverservice.model.User> {
+public interface ItemManager<Item, ItemId, UserType extends User> {
 
     /**
      * Retrieves an item.
@@ -18,8 +22,8 @@ public interface ItemManager<Item, ItemId, User extends org.tes.productretriever
      * @param itemId the id of the item.
      * @return the item.
      */
-    Item getItem(
-            User user,
+    List<Item> getItems(
+            UserType user,
             ItemId itemId
     );
 }

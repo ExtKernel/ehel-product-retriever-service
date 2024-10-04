@@ -132,51 +132,111 @@ You can enter this endpoint in the "Your auth accepted" field on the "User Token
 - Method: `GET`
 - Path: `/auth-code/latest`
 
+# Usage
+## Java jar
+1) Clone the repository:
+    ```bash
+      git clone https://github.com/ExtKernel/ehel-product-retriever-service
+    ```
+2) Navigate to the directory:
+    ```bash
+      cd ehel-product-retriever-service
+    ```
+3) Run:
+    ```bash
+      mvn package    
+    ```
+4) Run the .jar file:
+    ```bash
+      java -jar target/product-retriever-service-<VERSION>.jar    
+    ```
+## Maven plugin
+1) Clone the repository:
+    ```bash
+      git clone https://github.com/ExtKernel/ehel-product-retriever-service
+    ```
+2) Navigate to the directory:
+    ```bash
+      cd ehel-product-retriever-service
+    ```
+3) Run:
+    ```bash
+      mvn spring-boot:run
+    ```
+## Docker
+1) Pull the Docker image:
+    ```bash
+      docker pull exkernel/ehel-product-retriever-service:<VERSION>
+    ```
+2) Run the container:
+    ```bash
+      docker run --name=ehel-product-retriever-service -p 8000:8000 exkernel/ehel-product-retriever-service:<VERSION>
+    ```
+    - You can map any external port you want to the internal one
+    - You can give any name to the container
+
+   Remember to specify environment variables using the `-e` flag:
+    - `-e EUREKA_URI=<value>`
+    - `-e DATASOURCE_HOST=<value>`
+    - `-e DATASOURCE_USERNAME=<value>`
+    - `-e DATASOURCE_PASSWORD=<value>`
+    - `-e PRINCIPAL_ROLE_NAME=<value>`
+    - `-e OAUTH2_PROVIDER_ISSUER_URL=<value>`
+    - `-e OAUTH2_PROVIDER_CLIENT_ID=<value>`
+    - `-e OAUTH2_PROVIDER_CLIENT_SECRET=<value>`
+    - `-e OAUTH2_PROVIDER_INTROSPECTION_URL=<value>`
+
+   You may also specify the optional ones if you want:
+    - `-e IPA_API_ENDPOINT=<value>`
+    - `-e IPA_API_AUTH_ENDPOINT=<value>`
+    - `-e KC_ADMIN_CLI_CLIENT_ID=<value>`
+
+   ### If you are going to synchronize FreeIPA clients:
+    1) Copy your `ca.crt` certificate file to the container:
+       ```bash
+         docker cp <path-to-certificate-file-on-your-local-machine> <container-id-or-name>:/app/<desired-certificate-file-name>.crt
+       ```
+    2) Make sure you specify the path to the certificate(by default `ca.crt`) file correctly when creating the **(Free)IPA Client**:
+       ```json
+       {
+         "certPath": "/app/<specified-in-the-previous-step-certificate-file-name>.crt"
+       }
+       ```
+
+**BUT BE AWARE**: `-e SERVER_PORT=<value>` - changes the internal port of the service, which won't be considered by the [Dockerfile](Dockerfile). There always will be port `8000` exposed, until you change it and build the image yourself.
+
 ## Environment Variables
 
 The following environment variables are used to configure the Product Retriever Service. They should be set in your environment or configuration files to ensure proper operation.
 
 ### eBay API URLs
-- **EBAY_BROWSE_API_ITEM_SUMMARY_URL**
-    - This environment variable specifies the URL for the eBay Browse API's item summary endpoint.
-
-- **EBAY_BROWSE_API_GET_ITEM_URL**
-    - This variable defines the URL for the eBay Browse API's get item endpoint.
-
-### Token Retrieval
-- **ACCESS_TOKEN_RETRIEVE_URI**
-    - URL used to retrieve the access token from eBay’s OAuth2 system.
-
-- **REFRESH_TOKEN_RETRIEVE_URI**
-    - URL used to retrieve the refresh token from eBay’s OAuth2 system.
+- `EBAY_TOKEN_URL` - This variable defines the URL for the eBay API's token retrieval/exchange endpoint. Default: `https://api.ebay.com/identity/v1/oauth2/token`.
+- `EBAY_BROWSE_API_ITEM_SUMMARY_URL` - This environment variable specifies the URL for the eBay Browse API's item summary endpoint. Default: `https://api.ebay.com/buy/browse/v1/item_summary/search`.
+- `EBAY_BROWSE_API_GET_ITEM_URL` - This variable defines the URL for the eBay Browse API's get item endpoint. Default: `https://api.ebay.com/buy/browse/v1/item`.
 
 ### Security and Roles
-- **PRINCIPAL_ROLE_NAME**
-      - Specifies the role name for the principal user in the application. The user for whom you will obtain an access token from your OAuth2 provider should have this role.
+- `PRINCIPAL_ROLE_NAME` - Specifies the role name for the principal user in the application. The user for whom you will obtain an access token from your OAuth2 provider should have this role. Default: `administrator`.
 
 ### Service Discovery
-- **EUREKA_URI**
-    - The URL for the Eureka service registry. Default: `http://localhost:8761/eureka`.
+- `EUREKA_URI` - The URL for the Eureka service registry. Default: `http://localhost:8761/eureka`.
 
 ### Server Configuration
-- **SERVER_PORT**
-    - The port on which the application server will run. Default: `8000`.
+- `SERVER_PORT` - The port on which the application server will run. Default: `8000`.
+
+### Database
+The database must be PostgreSQL.
+- `DATASOURCE_HOST` - the URL of the server where the database is hosted
+- `DATASOURCE_NAME` - the name of the database
+- `DATASOURCE_USERNAME` - The username that has the necessary permissions to access and interact with the database
+- `DATASOURCE_PASSWORD` - the password of the user
 
 ### Spring Cloud and Security
-- **OAUTH2_PROVIDER_ISSUER_URL**
-    - The issuer URI for the OAuth2 provider.
-
-- **OAUTH2_PROVIDER_CLIENT_ID**
-    - Client ID for the OAuth2 provider's opaque token configuration.
-
-- **OAUTH2_PROVIDER_CLIENT_SECRET**
-    - Client secret for the OAuth2 provider's opaque token configuration.
-
-- **OAUTH2_PROVIDER_INTROSPECTION_URL**
-    - URL for the introspection endpoint of the OAuth2 provider.
+- `OAUTH2_PROVIDER_ISSUER_URL` - The issuer URI for the OAuth2 provider.
+- `OAUTH2_PROVIDER_CLIENT_ID` - Client ID for the OAuth2 provider's opaque token configuration.
+- `OAUTH2_PROVIDER_CLIENT_SECRET` - Client secret for the OAuth2 provider's opaque token configuration.
+- `OAUTH2_PROVIDER_INTROSPECTION_URL` - URL for the introspection endpoint of the OAuth2 provider.
 
 ### Additional Configuration
-- **LIVERELOAD_PORT**
-    - Port used for live reload functionality. Default: `35730`.
+- `LIVERELOAD_PORT` - Port used for live reload functionality. Default: `35730`.
 
 Ensure these variables are properly set to avoid runtime issues.

@@ -52,43 +52,43 @@ public class EbayUserController {
         return service.findById(userId);
     }
 
-    @GetMapping("/item")
-    public EbayItem getItem(
-            @RequestParam("userId") Long userId,
+    @GetMapping("/{userId}/item")
+    public List<EbayItem> getItems(
+            @PathVariable String userId,
             @RequestParam("keyword") String keyword,
             @RequestParam(value = "sort", required = false) String sort,
             @RequestParam(value = "filters", required = false) List<String> filters
     ) {
-        EbayUser user = service.findById(userId);
+        EbayUser user = service.findById(Long.valueOf(userId));
 
         if (sort != null && filters != null) {
-            return itemManager.getItem(
+            return itemManager.getItems(
                     user,
                     keyword,
                     sort,
                     filters
             );
         } else if (sort != null) {
-            return itemManager.getItem(
+            return itemManager.getItems(
                     user,
                     keyword,
                     sort
             );
         } else if (filters != null) {
-            return itemManager.getItem(
+            return itemManager.getItems(
                     user,
                     keyword,
                     filters
             );
         } else {
-            return itemManager.getItem(
+            return itemManager.getItems(
                     user,
                     keyword
             );
         }
     }
 
-    @GetMapping("/{itemId}")
+    @GetMapping("/item/{itemId}")
     public EbayItem getItemById(
             @RequestParam("userId") Long userId,
             @PathVariable String itemId,

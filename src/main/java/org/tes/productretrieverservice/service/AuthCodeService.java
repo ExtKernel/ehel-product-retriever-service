@@ -54,12 +54,8 @@ public class AuthCodeService extends GenericCrudService<AuthCode, Long> {
      */
     public AuthCode findLatest()
             throws NoRecordOfAuthCodeException {
-        if (repository.findFirstByOrderByCreationDateDesc().isPresent()) {
-            return repository.findFirstByOrderByCreationDateDesc().get();
-        } else {
-            throw new NoRecordOfAuthCodeException(
-                            "There is no record of auth codes in the database"
-            );
-        }
+        return repository.findFirstByOrderByCreationDateDesc().orElseThrow(() -> new NoRecordOfAuthCodeException(
+                "There is no record of auth codes in the database"
+        ));
     }
 }

@@ -28,15 +28,16 @@ public class DefaultEbayItemRequestSender implements EbayItemRequestSender {
     @Autowired
     public DefaultEbayItemRequestSender(
             EbayItemRequestBuilder requestBuilder,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            RestTemplate restTemplate
     ) {
         this.requestBuilder = requestBuilder;
         this.objectMapper = objectMapper;
-        this.restTemplate = requestBuilder.getRestTemplate();
+        this.restTemplate = restTemplate;
     }
 
     @Override
-    public JsonNode sendGetItemRequest(
+    public JsonNode sendGetItemsRequest(
             EbayUser user,
             String keyword
     ) {
@@ -60,7 +61,7 @@ public class DefaultEbayItemRequestSender implements EbayItemRequestSender {
     }
 
     @Override
-    public JsonNode sendGetItemRequest(
+    public JsonNode sendGetItemsRequest(
             EbayUser user,
             String keyword,
             String sort
@@ -86,7 +87,7 @@ public class DefaultEbayItemRequestSender implements EbayItemRequestSender {
     }
 
     @Override
-    public JsonNode sendGetItemRequest(
+    public JsonNode sendGetItemsRequest(
             EbayUser user,
             String keyword,
             List<String> filters
@@ -112,7 +113,7 @@ public class DefaultEbayItemRequestSender implements EbayItemRequestSender {
     }
 
     @Override
-    public JsonNode sendGetItemRequest(
+    public JsonNode sendGetItemsRequest(
             EbayUser user,
             String keyword,
             String sort,

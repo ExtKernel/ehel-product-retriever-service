@@ -20,9 +20,9 @@ import org.tes.productretrieverservice.model.RefreshToken;
  */
 @Component
 public class EbayTokenRequestSender implements TokenRequestSender<EbayUser, AuthCode> {
-    ObjectMapper objectMapper;
-    RestTemplate restTemplate;
-    TokenRequestBuilder<EbayUser, AuthCode> requestBuilder;
+    private final ObjectMapper objectMapper;
+    private final TokenRequestBuilder<EbayUser, AuthCode> requestBuilder;
+    private final RestTemplate restTemplate;
 
     @Value("${ebayTokenUrl}")
     private String ebayTokenUrl;
@@ -30,11 +30,12 @@ public class EbayTokenRequestSender implements TokenRequestSender<EbayUser, Auth
     @Autowired
     public EbayTokenRequestSender(
             ObjectMapper objectMapper,
-            TokenRequestBuilder<EbayUser, AuthCode> requestBuilder
+            TokenRequestBuilder<EbayUser, AuthCode> requestBuilder,
+            RestTemplate restTemplate
     ) {
         this.objectMapper = objectMapper;
-        this.restTemplate = requestBuilder.getRestTemplate();
         this.requestBuilder = requestBuilder;
+        this.restTemplate = restTemplate;
     }
 
     /**
@@ -52,7 +53,10 @@ public class EbayTokenRequestSender implements TokenRequestSender<EbayUser, Auth
                     HttpMethod.POST,
                     requestBuilder.buildHttpRequestEntity(
                             user,
-                            requestBuilder.buildAuthModelRequestBody(authCode)
+                            requestBuilder.buildAuthModelRequestBody(
+                                    user,
+                                    authCode
+                            )
                     ),
                     String.class
             ).getBody());

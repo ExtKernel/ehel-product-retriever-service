@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
 import org.tes.productretrieverservice.model.EbayItem;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,6 +12,16 @@ import java.util.stream.StreamSupport;
 
 @Component
 public class DefaultEbayItemJsonObjectMapper implements EbayItemJsonObjectMapper {
+
+    @Override
+    public List<EbayItem> mapItemsJsonToItems(JsonNode ebayItemJsonNode) {
+        JsonNode itemSummariesEbayJsonNode = ebayItemJsonNode.get("itemSummaries");
+
+        List<EbayItem> ebayItems = new ArrayList<>();
+        itemSummariesEbayJsonNode.forEach(ebayItemJson -> ebayItems.add(mapItemJsonToItem(ebayItemJson)));
+
+        return ebayItems;
+    }
 
     @Override
     public EbayItem mapItemJsonToItem(JsonNode ebayItemJsonNode) {

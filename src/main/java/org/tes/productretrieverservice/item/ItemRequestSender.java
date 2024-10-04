@@ -6,22 +6,22 @@ import org.tes.productretrieverservice.model.User;
 /**
  * An interface for sending item-related requests.
  *
- * @param <ItemId> the type of identifier that the item uses.
+ * @param <ItemIdentificator> the type of identifier that the item uses.
  *                        Could be just a String ID or literally anything else,
  *                        based on the object.
  * @param <UserType> the type of user to be used while building a request.
  */
-public interface ItemRequestSender<ItemId, UserType extends User> {
+public interface ItemRequestSender<ItemIdentificator, UserType extends User> {
 
     /**
-     * Sends a request to get an item.
+     * Sends a request to get items.
      *
      * @param user the user to be used while building the request.
-     * @param ItemId the id of the item.
-     * @return a JSON node of the item.
+     * @param ItemIdentificator the identificator that will be used to find the items.
+     * @return a JSON node of the items.
      */
-    JsonNode sendGetItemRequest(
+    JsonNode sendGetItemsRequest(
             UserType user,
-            ItemId ItemId
+            ItemIdentificator ItemIdentificator
     );
 }

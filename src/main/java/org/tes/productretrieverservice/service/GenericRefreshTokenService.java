@@ -5,6 +5,7 @@ import org.tes.productretrieverservice.exception.NoRecordOfRefreshTokenException
 import org.tes.productretrieverservice.exception.RefreshTokenIsNullException;
 import org.tes.productretrieverservice.model.AuthModel;
 import org.tes.productretrieverservice.model.RefreshToken;
+import org.tes.productretrieverservice.model.User;
 import org.tes.productretrieverservice.repository.RefreshTokenRepository;
 import org.tes.productretrieverservice.token.TokenManager;
 
@@ -14,16 +15,16 @@ import org.tes.productretrieverservice.token.TokenManager;
  *
  * @param <T> the object, which is supposed to be used for retrieval of refresh tokens.
  */
-public abstract class GenericRefreshTokenService<T extends AuthModel>
+public abstract class GenericRefreshTokenService<UserType extends User, AuthModelType extends AuthModel>
         extends GenericCrudService<RefreshToken, Long>
-        implements TokenService<RefreshToken, T> {
+        implements TokenService<UserType, RefreshToken, AuthModelType> {
     RefreshTokenRepository tokenRepository;
-    TokenManager<T> tokenManager;
+    TokenManager<UserType, AuthModelType> tokenManager;
 
     public GenericRefreshTokenService(
             JpaRepository<RefreshToken, Long> repository,
             RefreshTokenRepository tokenRepository,
-            TokenManager<T> tokenManager
+            TokenManager<UserType, AuthModelType> tokenManager
     ) {
         super(repository);
         this.tokenRepository = tokenRepository;
@@ -31,8 +32,14 @@ public abstract class GenericRefreshTokenService<T extends AuthModel>
     }
 
     @Override
-    public RefreshToken generate(T authModel) {
-        return tokenManager.getRefreshToken(authModel);
+    public RefreshToken generate(
+            UserType user,
+            AuthModelType authModel
+    ) {
+        return tokenManager.getRefreshToken(
+                user,
+                authModel
+        );
     }
 
     @Override

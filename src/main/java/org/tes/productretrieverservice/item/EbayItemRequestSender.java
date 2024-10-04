@@ -8,24 +8,24 @@ import java.util.List;
 public interface EbayItemRequestSender extends ItemRequestSender<String, EbayUser> {
 
     @Override
-    JsonNode sendGetItemRequest(
+    JsonNode sendGetItemsRequest(
             EbayUser user,
             String keyword
     );
 
-    JsonNode sendGetItemRequest(
+    JsonNode sendGetItemsRequest(
             EbayUser user,
             String keyword,
             String sort
     );
 
-    JsonNode sendGetItemRequest(
+    JsonNode sendGetItemsRequest(
             EbayUser user,
             String keyword,
             List<String> filters
     );
 
-    JsonNode sendGetItemRequest(
+    JsonNode sendGetItemsRequest(
             EbayUser user,
             String keyword,
             String sort,

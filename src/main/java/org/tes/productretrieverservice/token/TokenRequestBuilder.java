@@ -19,7 +19,7 @@ public interface TokenRequestBuilder<UserType extends User, AuthModelType extend
      * Builds an {@link HttpEntity}
      * for {@link org.tes.productretrieverservice.model.Token}-related requests.
      *
-     * @param user a user which holds the necessary data for request building
+     * @param user a user which holds the necessary data for request building.
      * @param requestBody a request body to include in the {@link HttpEntity}.
      * @return the {@link HttpEntity}.
      */
@@ -32,10 +32,14 @@ public interface TokenRequestBuilder<UserType extends User, AuthModelType extend
      * Builds a request body, containing a {@link AuthModelType}
      * to perform a {@link RefreshToken} retrieval request.
      *
+     * @param user a user which holds the necessary data for request building.
      * @param authModel the {@link AuthModelType}.
      * @return the request body.
      */
-    String buildAuthModelRequestBody(AuthModelType authModel);
+    String buildAuthModelRequestBody(
+            UserType user,
+            AuthModelType authModel
+    );
 
     /**
      * Builds a request body, containing a {@link RefreshToken}

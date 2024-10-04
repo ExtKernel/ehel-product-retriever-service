@@ -22,23 +22,23 @@ public class DefaultEbayItemManager implements EbayItemManager{
     }
 
     @Override
-    public EbayItem getItem(
+    public List<EbayItem> getItems(
             EbayUser user,
             String keyword
     ) {
-        return jsonObjectMapper.mapItemJsonToItem(requestSender.sendGetItemRequest(
+        return jsonObjectMapper.mapItemsJsonToItems(requestSender.sendGetItemsRequest(
                 user,
                 keyword
         ));
     }
 
     @Override
-    public EbayItem getItem(
+    public List<EbayItem> getItems(
             EbayUser user,
             String keyword,
             String sort
     ) {
-        return jsonObjectMapper.mapItemJsonToItem(requestSender.sendGetItemRequest(
+        return jsonObjectMapper.mapItemsJsonToItems(requestSender.sendGetItemsRequest(
                 user,
                 keyword,
                 sort
@@ -46,12 +46,12 @@ public class DefaultEbayItemManager implements EbayItemManager{
     }
 
     @Override
-    public EbayItem getItem(
+    public List<EbayItem> getItems(
             EbayUser user,
             String keyword,
             List<String> filters
     ) {
-        return jsonObjectMapper.mapItemJsonToItem(requestSender.sendGetItemRequest(
+        return jsonObjectMapper.mapItemsJsonToItems(requestSender.sendGetItemsRequest(
                 user,
                 keyword,
                 filters
@@ -59,13 +59,13 @@ public class DefaultEbayItemManager implements EbayItemManager{
     }
 
     @Override
-    public EbayItem getItem(
+    public List<EbayItem> getItems(
             EbayUser user,
             String keyword,
             String sort,
             List<String> filters
     ) {
-        return jsonObjectMapper.mapItemJsonToItem(requestSender.sendGetItemRequest(
+        return jsonObjectMapper.mapItemsJsonToItems(requestSender.sendGetItemsRequest(
                 user,
                 keyword,
                 sort,

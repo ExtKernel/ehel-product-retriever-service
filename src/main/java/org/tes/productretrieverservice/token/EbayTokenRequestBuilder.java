@@ -3,7 +3,6 @@ package org.tes.productretrieverservice.token;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,9 +21,6 @@ import java.util.Map;
 @Component
 public class EbayTokenRequestBuilder implements TokenRequestBuilder<EbayUser, AuthCode> {
     private final ObjectMapper objectMapper;
-
-    @Value("${EBAY_CLIENT_REDIRECT_URI}")
-    private String redirectUri;
 
     @Autowired
     public EbayTokenRequestBuilder(ObjectMapper objectMapper) {
@@ -49,11 +45,14 @@ public class EbayTokenRequestBuilder implements TokenRequestBuilder<EbayUser, Au
     }
 
     @Override
-    public String buildAuthModelRequestBody(AuthCode authCode) {
+    public String buildAuthModelRequestBody(
+            EbayUser user,
+            AuthCode authCode
+    ) {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("grant_type", "authorization_code");
         requestBody.put("code", authCode.getAuthCode());
-        requestBody.put("redirect_uri", redirectUri);
+        requestBody.put("redirect_uri", user.getRedirectUrl());
 
         try {
             return objectMapper.writeValueAsString(requestBody);

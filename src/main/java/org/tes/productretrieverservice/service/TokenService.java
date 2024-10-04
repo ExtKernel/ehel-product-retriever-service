@@ -3,6 +3,7 @@ package org.tes.productretrieverservice.service;
 import org.tes.productretrieverservice.exception.NoRecordOfRefreshTokenException;
 import org.tes.productretrieverservice.model.AuthModel;
 import org.tes.productretrieverservice.model.Token;
+import org.tes.productretrieverservice.model.User;
 
 /**
  * An interface for a service that performs operations on {@link AuthModel} tokens.
@@ -11,7 +12,7 @@ import org.tes.productretrieverservice.model.Token;
  * @param <AuthModelType> the type of the {@link AuthModel} object
  *                      that is needed for the token generation.
  */
-public interface TokenService<TokenType extends Token, AuthModelType extends AuthModel>
+public interface TokenService<UserType extends User, TokenType extends Token, AuthModelType extends AuthModel>
         extends CrudService<TokenType, Long> {
 
     /**
@@ -20,7 +21,10 @@ public interface TokenService<TokenType extends Token, AuthModelType extends Aut
      * @param authModel the {@link AuthModelType} that will be used while generating.
      * @return the {@link TokenType} object.
      */
-    TokenType generate(AuthModelType authModel);
+    TokenType generate(
+            UserType user,
+            AuthModelType authModel
+    );
 
     /**
      * Retrieves the latest {@link TokenType} object.

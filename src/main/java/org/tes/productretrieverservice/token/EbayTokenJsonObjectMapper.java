@@ -9,18 +9,18 @@ import org.tes.productretrieverservice.model.RefreshToken;
 public class EbayTokenJsonObjectMapper implements TokenJsonObjectMapper {
 
     @Override
-    public RefreshToken mapUserRefreshTokenJsonNodeToUserRefreshToken(JsonNode userRefreshTokenJsonNode) {
+    public RefreshToken mapRefreshTokenJsonNodeToUserRefreshToken(JsonNode refreshTokenJsonNode) {
         return new RefreshToken(
-                userRefreshTokenJsonNode.path("refresh_token").asText(),
-                userRefreshTokenJsonNode.path("refresh_token_expires_in").asInt()
+                refreshTokenJsonNode.path("refresh_token").asText(),
+                refreshTokenJsonNode.path("refresh_token_expires_in").asInt()
         );
     }
 
     @Override
-    public AccessToken mapUserAccessTokenJsonNodeToUserAccessToken(JsonNode userAccessTokenJsonNode) {
+    public AccessToken mapAccessTokenJsonNodeToUserAccessToken(JsonNode accessTokenJsonNode) {
         return new AccessToken(
-                userAccessTokenJsonNode.path("access_token").asText(),
-                userAccessTokenJsonNode.path("expires_in").asInt()
+                accessTokenJsonNode.path("access_token").asText(),
+                accessTokenJsonNode.path("expires_in").asInt()
         );
     }
 }

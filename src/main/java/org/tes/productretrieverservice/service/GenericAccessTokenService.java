@@ -6,6 +6,7 @@ import org.tes.productretrieverservice.exception.NoRecordOfAccessTokenException;
 import org.tes.productretrieverservice.model.AccessToken;
 import org.tes.productretrieverservice.model.AuthCode;
 import org.tes.productretrieverservice.model.RefreshToken;
+import org.tes.productretrieverservice.model.User;
 import org.tes.productretrieverservice.repository.AccessTokenRepository;
 import org.tes.productretrieverservice.token.TokenManager;
 
@@ -13,16 +14,16 @@ import org.tes.productretrieverservice.token.TokenManager;
  * A generic class that implements the generic behaviour
  * of services that manage {@link AccessToken} objects.
  */
-public abstract class GenericAccessTokenService
+public abstract class GenericAccessTokenService<UserType extends User>
         extends GenericCrudService<AccessToken, Long>
-        implements TokenService<AccessToken, RefreshToken> {
+        implements TokenService<UserType, AccessToken, RefreshToken> {
     AccessTokenRepository tokenRepository;
-    TokenManager<AuthCode> tokenManager;
+    TokenManager<UserType, AuthCode> tokenManager;
 
     public GenericAccessTokenService(
             JpaRepository<AccessToken, Long> repository,
             AccessTokenRepository tokenRepository,
-            TokenManager<AuthCode> tokenManager
+            TokenManager<UserType, AuthCode> tokenManager
     ) {
         super(repository);
         this.tokenRepository = tokenRepository;
@@ -30,8 +31,14 @@ public abstract class GenericAccessTokenService
     }
 
     @Override
-    public AccessToken generate(RefreshToken refreshToken) {
-        return tokenManager.getAccessToken(refreshToken);
+    public AccessToken generate(
+            UserType user,
+            RefreshToken refreshToken
+    ) {
+        return tokenManager.getAccessToken(
+                user,
+                refreshToken
+        );
     }
 
     @Override

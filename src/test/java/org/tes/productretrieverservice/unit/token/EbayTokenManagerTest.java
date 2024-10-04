@@ -1,71 +1,78 @@
 package org.tes.productretrieverservice.unit.token;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.tes.productretrieverservice.TestFactory;
 import org.tes.productretrieverservice.model.AccessToken;
 import org.tes.productretrieverservice.model.AuthCode;
+import org.tes.productretrieverservice.model.EbayUser;
 import org.tes.productretrieverservice.model.RefreshToken;
 import org.tes.productretrieverservice.token.EbayTokenManager;
 import org.tes.productretrieverservice.token.TokenJsonObjectMapper;
 import org.tes.productretrieverservice.token.TokenRequestSender;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class EbayTokenManagerTest {
+@ExtendWith(MockitoExtension.class)
+public class EbayTokenManagerTest extends TestFactory {
 
     @Mock
-    private TokenRequestSender requestSender;
+    private TokenRequestSender<EbayUser, AuthCode> requestSender;
 
     @Mock
     private TokenJsonObjectMapper jsonObjectMapper;
 
-    private EbayTokenManager tokenManager;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        tokenManager = new EbayTokenManager(requestSender, jsonObjectMapper);
-    }
+    @InjectMocks
+    private EbayTokenManager ebayTokenManager;
 
     @Test
-    void testGetRefreshToken() {
-        // Given
-        AuthCode authCode = new AuthCode(
-                "auth-code-value",
-                3600
+    public void givenUserAndAuthCode_whenGetRefreshToken_thenReturnRefreshToken()
+            throws Exception {
+        EbayUser user = buildEbayUser();
+        AuthCode authCode = buildValidAuthCode();
+        JsonNode refreshTokenJsonNode = getEbayTokensJsonNode();
+        RefreshToken refreshToken = buildValidRefreshToken();
+
+        when(requestSender.sendGetRefreshTokenRequest(
+                user,
+                authCode
+        )).thenReturn(refreshTokenJsonNode);
+        when(jsonObjectMapper.mapRefreshTokenJsonNodeToUserRefreshToken(refreshTokenJsonNode)).thenReturn(refreshToken);
+
+        RefreshToken result = ebayTokenManager.getRefreshToken(
+                user,
+                authCode
         );
-        JsonNode refreshTokenJsonNode = mock(JsonNode.class);
-        RefreshToken expectedRefreshToken = new RefreshToken("refresh-token-value", 3600);
 
-        when(requestSender.sendGetRefreshTokenRequest(authCode)).thenReturn(refreshTokenJsonNode);
-        when(jsonObjectMapper.mapUserRefreshTokenJsonNodeToUserRefreshToken(refreshTokenJsonNode)).thenReturn(expectedRefreshToken);
-
-        // When
-        RefreshToken result = tokenManager.getRefreshToken(authCode);
-
-        // Then
-        assertEquals(expectedRefreshToken, result);
+        assertEquals(refreshToken.getToken(), result.getToken());
+        assertEquals(refreshToken.getExpiresIn(), result.getExpiresIn());
     }
 
     @Test
-    void testGetAccessToken() {
-        // Given
-        RefreshToken refreshToken = new RefreshToken("refresh-token-value", 3600);
-        JsonNode accessTokenJsonNode = mock(JsonNode.class);
-        AccessToken expectedAccessToken = new AccessToken("access-token-value", 1800);
+    public void givenUserAndRefreshToken_whenGetAccessToken_thenReturnAccessToken()
+            throws Exception {
+        EbayUser user = buildEbayUser();
+        JsonNode accessTokenJsonNode = getEbayTokensJsonNode();
+        AccessToken accessToken = buildValidAccessToken();
+        RefreshToken refreshToken = buildValidRefreshToken();
 
-        when(requestSender.sendGetAccessTokenRequest(refreshToken)).thenReturn(accessTokenJsonNode);
-        when(jsonObjectMapper.mapUserAccessTokenJsonNodeToUserAccessToken(accessTokenJsonNode)).thenReturn(expectedAccessToken);
+        when(requestSender.sendGetAccessTokenRequest(
+                user,
+                refreshToken
+        )).thenReturn(accessTokenJsonNode);
+        when(jsonObjectMapper.mapAccessTokenJsonNodeToUserAccessToken(accessTokenJsonNode)).thenReturn(accessToken);
 
-        // When
-        AccessToken result = tokenManager.getAccessToken(refreshToken);
+        AccessToken result = ebayTokenManager.getAccessToken(
+                user,
+                refreshToken
+        );
 
-        // Then
-        assertEquals(expectedAccessToken, result);
+        assertEquals(accessToken.getToken(), result.getToken());
+        assertEquals(accessToken.getExpiresIn(), result.getExpiresIn());
     }
 }

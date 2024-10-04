@@ -26,7 +26,7 @@ public class EbayTokenManager implements TokenManager<EbayUser, AuthCode> {
             EbayUser user,
             AuthCode authCode
     ) {
-        return jsonObjectMapper.mapUserRefreshTokenJsonNodeToUserRefreshToken(
+        return jsonObjectMapper.mapRefreshTokenJsonNodeToUserRefreshToken(
                 requestSender.sendGetRefreshTokenRequest(
                         user,
                         authCode
@@ -39,7 +39,7 @@ public class EbayTokenManager implements TokenManager<EbayUser, AuthCode> {
             EbayUser user,
             RefreshToken refreshToken
     ) {
-        return jsonObjectMapper.mapUserAccessTokenJsonNodeToUserAccessToken(
+        return jsonObjectMapper.mapAccessTokenJsonNodeToUserAccessToken(
                 requestSender.sendGetAccessTokenRequest(
                         user,
                         refreshToken

@@ -12,15 +12,15 @@ import java.util.Optional;
 
 @RequestMapping("/secured/auth-code")
 @RestController
-public class UserAuthCodeController {
+public class AuthCodeController {
     private final AuthCodeService service;
 
     @Autowired
-    public UserAuthCodeController(AuthCodeService service) {
+    public AuthCodeController(AuthCodeService service) {
         this.service = service;
     }
 
-    @GetMapping()
+    @GetMapping() // POST is not used because of eBay's API
     public AuthCode save(
             @RequestParam String code,
             @RequestParam String expires_in

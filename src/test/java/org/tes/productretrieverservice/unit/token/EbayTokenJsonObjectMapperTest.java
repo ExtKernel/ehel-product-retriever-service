@@ -2,50 +2,57 @@ package org.tes.productretrieverservice.unit.token;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
+import org.tes.productretrieverservice.TestFactory;
 import org.tes.productretrieverservice.model.AccessToken;
 import org.tes.productretrieverservice.model.RefreshToken;
 import org.tes.productretrieverservice.token.EbayTokenJsonObjectMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EbayTokenJsonObjectMapperTest {
+public class EbayTokenJsonObjectMapperTest extends TestFactory {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final EbayTokenJsonObjectMapper ebayTokenJsonObjectMapper = new EbayTokenJsonObjectMapper();
 
-    private EbayTokenJsonObjectMapper tokenJsonObjectMapper;
-    private ObjectMapper objectMapper;
+    @Test
+    public void givenValidRefreshToken_whenMapUserRefreshTokenJsonNodeToRefreshToken_thenReturnRefreshToken() {
+        RefreshToken refreshToken = buildValidRefreshToken();
 
-    @BeforeEach
-    void setUp() {
-        tokenJsonObjectMapper = new EbayTokenJsonObjectMapper();
-        objectMapper = new ObjectMapper();
+        ObjectNode refreshTokenObjectNode = objectMapper.createObjectNode();
+        refreshTokenObjectNode.put("refresh_token", refreshToken.getToken());
+        refreshTokenObjectNode.put("refresh_token_expires_in", refreshToken.getExpiresIn());
+
+        RefreshToken result = ebayTokenJsonObjectMapper.mapRefreshTokenJsonNodeToUserRefreshToken(refreshTokenObjectNode);
+
+        assertEquals(
+                refreshToken.getToken(),
+                result.getToken()
+        );
+        assertEquals(
+                refreshToken.getExpiresIn(),
+                result.getExpiresIn()
+        );
     }
 
     @Test
-    void testMapUserRefreshTokenJsonNodeToUserRefreshToken() throws Exception {
-        // Given
-        String jsonString = "{\"refresh_token\": \"refresh-token-value\", \"refresh_token_expires_in\": 3600}";
-        JsonNode jsonNode = objectMapper.readTree(jsonString);
+    public void givenValidAccessToken_whenMapUserAccessTokenJsonNodeToAccessToken_thenReturnAccessToken() {
+        AccessToken accessToken = buildValidAccessToken();
 
-        // When
-        RefreshToken result = tokenJsonObjectMapper.mapUserRefreshTokenJsonNodeToUserRefreshToken(jsonNode);
+        ObjectNode accessTokenObjectNode = objectMapper.createObjectNode();
+        accessTokenObjectNode.put("access_token", accessToken.getToken());
+        accessTokenObjectNode.put("expires_in", accessToken.getExpiresIn());
+        JsonNode accessTokenJsonNode = accessTokenObjectNode;
 
-        // Then
-        assertEquals("refresh-token-value", result.getToken());
-        assertEquals(3600, result.getExpiresIn());
-    }
+        AccessToken result = ebayTokenJsonObjectMapper.mapAccessTokenJsonNodeToUserAccessToken(accessTokenJsonNode);
 
-    @Test
-    void testMapUserAccessTokenJsonNodeToUserAccessToken() throws Exception {
-        // Given
-        String jsonString = "{\"access_token\": \"access-token-value\", \"expires_in\": 1800}";
-        JsonNode jsonNode = objectMapper.readTree(jsonString);
-
-        // When
-        AccessToken result = tokenJsonObjectMapper.mapUserAccessTokenJsonNodeToUserAccessToken(jsonNode);
-
-        // Then
-        assertEquals("access-token-value", result.getToken());
-        assertEquals(1800, result.getExpiresIn());
+        assertEquals(
+                accessToken.getToken(),
+                result.getToken()
+        );
+        assertEquals(
+                accessToken.getExpiresIn(),
+                result.getExpiresIn()
+        );
     }
 }

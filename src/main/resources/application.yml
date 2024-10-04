@@ -1,9 +1,8 @@
 # Variables to inject into Java variables
-ebayItemSummaryApiUrl: ${EBAY_BROWSE_API_ITEM_SUMMARY_URL}
-ebayGetItemApiUrl: ${EBAY_BROWSE_API_GET_ITEM_URL}
-accessTokenRetrievingUri: ${ACCESS_TOKEN_RETRIEVE_URL}
-refreshTokenRetrievingUri: ${REFRESH_TOKEN_RETRIEVE_URL}
-principalRoleName: ${PRINCIPAL_ROLE_NAME}
+ebayTokenUrl: ${EBAY_TOKEN_URL:https://api.ebay.com/identity/v1/oauth2/token}
+ebayItemSummaryApiUrl: ${EBAY_BROWSE_API_ITEM_SUMMARY_URL:https://api.ebay.com/buy/browse/v1/item_summary/search}
+ebayGetItemApiUrl: ${EBAY_BROWSE_API_GET_ITEM_URL:https://api.ebay.com/buy/browse/v1/item}
+principalRoleName: ${PRINCIPAL_ROLE_NAME:administrator}
 
 eureka:
     client:
@@ -37,3 +36,14 @@ spring:
                     client-id: ${OAUTH2_PROVIDER_CLIENT_ID}
                     client-secret: ${OAUTH2_PROVIDER_CLIENT_SECRET}
                     introspection-uri: ${OAUTH2_PROVIDER_INTROSPECTION_URL}
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        password: ${DATASOURCE_PASSWORD}
+        url: jdbc:postgresql://${DATASOURCE_HOST}/${DATASOURCE_NAME}
+        username: ${DATASOURCE_USERNAME}
+    jpa:
+        open-in-view: true
+    flyway:
+        enabled: true
+        baseline-on-migrate: true
+        validate-on-migrate: true
