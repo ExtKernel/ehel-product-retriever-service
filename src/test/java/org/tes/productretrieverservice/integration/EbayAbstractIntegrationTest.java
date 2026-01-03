@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public abstract class EbayAbstractIntegrationTest extends AbstractIntegrationTest {
 
     public String buildSaveAuthCodeUri(AuthCode authCode) {
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString("/secured/auth-code");
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString("/auth-code");
         return uriComponentsBuilder
                 .queryParam("code", authCode.getAuthCode())
                 .queryParam("expires_in", authCode.getExpiresIn())

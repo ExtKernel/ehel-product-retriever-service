@@ -10,7 +10,7 @@ import org.tes.productretrieverservice.service.AuthCodeService;
 
 import java.util.Optional;
 
-@RequestMapping("/secured/auth-code")
+@RequestMapping("/auth-code")
 @RestController
 public class AuthCodeController {
     private final AuthCodeService service;

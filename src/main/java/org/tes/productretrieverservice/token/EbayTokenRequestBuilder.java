@@ -1,22 +1,19 @@
 package org.tes.productretrieverservice.token;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.tes.productretrieverservice.exception.WritingAuthCodeRequestBodyToJsonStringException;
-import org.tes.productretrieverservice.exception.WritingRefreshTokenRequestBodyToJsonStringException;
 import org.tes.productretrieverservice.model.AuthCode;
 import org.tes.productretrieverservice.model.EbayUser;
 import org.tes.productretrieverservice.model.RefreshToken;
 
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class EbayTokenRequestBuilder implements TokenRequestBuilder<EbayUser, AuthCode> {
@@ -31,9 +28,9 @@ public class EbayTokenRequestBuilder implements TokenRequestBuilder<EbayUser, Au
      * @param user a user which holds the eBay client data.
      */
     @Override
-    public HttpEntity<String> buildHttpRequestEntity(
+    public HttpEntity<MultiValueMap<String, String>> buildHttpRequestEntity(
             EbayUser user,
-            String requestBody
+            MultiValueMap<String, String> requestBody
     ) {
         return new HttpEntity<>(
                 requestBody,
@@ -45,41 +42,25 @@ public class EbayTokenRequestBuilder implements TokenRequestBuilder<EbayUser, Au
     }
 
     @Override
-    public String buildAuthModelRequestBody(
+    public MultiValueMap<String, String> buildAuthModelRequestBody(
             EbayUser user,
             AuthCode authCode
     ) {
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("grant_type", "authorization_code");
-        requestBody.put("code", authCode.getAuthCode());
-        requestBody.put("redirect_uri", user.getRedirectUrl());
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("grant_type", "authorization_code");
+        requestBody.add("code", authCode.getAuthCode());
+        requestBody.add("redirect_uri", user.getRedirectUrl());
 
-        try {
-            return objectMapper.writeValueAsString(requestBody);
-        } catch (JsonProcessingException exception) {
-            throw new WritingAuthCodeRequestBodyToJsonStringException(
-                    "An exception occurred, while writing a request body,"
-                            + " containing an auth code to a JSON string",
-                    exception
-            );
-        }
+        return requestBody;
     }
 
     @Override
-    public String buildRefreshTokenRequestBody(RefreshToken refreshToken) {
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("grant_type", "refresh_token");
-        requestBody.put("refresh_token", refreshToken.getToken());
+    public MultiValueMap<String, String> buildRefreshTokenRequestBody(RefreshToken refreshToken) {
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("grant_type", "refresh_token");
+        requestBody.add("refresh_token", refreshToken.getToken());
 
-        try {
-            return objectMapper.writeValueAsString(requestBody);
-        } catch (JsonProcessingException exception) {
-            throw new WritingRefreshTokenRequestBodyToJsonStringException(
-                    "An exception occurred, while writing a request body,"
-                            + " containing a refresh token to a JSON string",
-                    exception
-            );
-        }
+        return requestBody;
     }
 
     @Override

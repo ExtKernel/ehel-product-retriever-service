@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.tes.productretrieverservice.model.*;
 
 import java.util.*;
@@ -136,43 +138,42 @@ public class TestFactory {
         );
     }
 
-    public Map<String, String> buildHashMapAuthModelRequestBody(
+    public MultiValueMap<String, String> buildHashMapAuthModelRequestBody(
             EbayUser user,
             AuthCode authCode
     ) {
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("grant_type", "authorization_code");
-        requestBody.put("code", authCode.getAuthCode());
-        requestBody.put("redirect_uri", user.getRedirectUrl());
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("grant_type", "authorization_code");
+        requestBody.add("code", authCode.getAuthCode());
+        requestBody.add("redirect_uri", user.getRedirectUrl());
 
         return requestBody;
     }
 
-    public String buildStringAuthModelRequestBody(
+    public MultiValueMap<String, String> buildStringAuthModelRequestBody(
             EbayUser user,
             AuthCode authCode
-    ) throws JsonProcessingException {
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("grant_type", "authorization_code");
-        requestBody.put("code", authCode.getAuthCode());
-        requestBody.put("redirect_uri", user.getRedirectUrl());
+    ) {
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("grant_type", "authorization_code");
+        requestBody.add("code", authCode.getAuthCode());
+        requestBody.add("redirect_uri", user.getRedirectUrl());
 
-        return objectMapper.writeValueAsString(requestBody);
+        return requestBody;
     }
 
-    public String buildStringRefreshTokenRequestBody(RefreshToken refreshToken)
-            throws JsonProcessingException {
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("grant_type", "refresh_token");
-        requestBody.put("refresh_token", refreshToken.getToken());
+    public MultiValueMap<String, String> buildStringRefreshTokenRequestBody(RefreshToken refreshToken) {
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("grant_type", "refresh_token");
+        requestBody.add("refresh_token", refreshToken.getToken());
 
-        return objectMapper.writeValueAsString(requestBody);
+        return requestBody;
     }
 
-    public Map<String, String> buildHashMapRefreshTokenRequestBody(RefreshToken refreshToken) {
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("grant_type", "refresh_token");
-        requestBody.put("refresh_token", refreshToken.getToken());
+    public MultiValueMap<String, String> buildHashMapRefreshTokenRequestBody(RefreshToken refreshToken) {
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("grant_type", "refresh_token");
+        requestBody.add("refresh_token", refreshToken.getToken());
 
         return requestBody;
     }

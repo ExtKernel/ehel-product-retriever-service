@@ -5,45 +5,58 @@ ebayGetItemApiUrl: ${EBAY_BROWSE_API_GET_ITEM_URL:https://api.ebay.com/buy/brows
 principalRoleName: ${PRINCIPAL_ROLE_NAME:administrator}
 
 eureka:
-    client:
-        service-url:
-            default-zone: ${EUREKA_URI:http://localhost:8761/eureka}
+  client:
+    enabled: ${EUREKA_ENABLED:true}
+    service-url:
+      default-zone: ${EUREKA_URI:http://localhost:8761/eureka}
+
 logging:
-    level:
-        root: warn
+  level:
+    root: ${LOG_LEVEL:warn}
+
 server:
-    port: ${SERVER_PORT:8000}
+  port: ${SERVER_PORT:8000}
+  ssl:
+    enabled: ${SSL_ENABLED:false}
+    key-alias: ${SSL_KEY_ALIAS}
+    key-password: ${SSL_KEY_PASSWORD}
+    key-store: ${SSL_KEYSTORE_PRIVATE_KEY}
+    key-store-password: ${SSL_KEYSTORE_PASSWORD}
+    trust-store: ${SSL_TRUSTSTORE}
+    trust-store-password: ${SSL_TRUSTSTORE_PASSWORD}
+    client-auth: ${SSL_POLICY:NEED}
+
 spring:
-    application:
-        name: product-retriever-service
-    cloud:
-        loadbalancer:
-            cache:
-                enabled: true
-            enabled: true
-    devtools:
-        livereload:
-            enabled: true
-            port: ${LIVERELOAD_PORT:35730}
-    main:
-        banner-mode: 'off'
-    security:
-        oauth2:
-            resourceserver:
-                jwt:
-                    issuer-uri: ${OAUTH2_PROVIDER_ISSUER_URL}
-                opaquetoken:
-                    client-id: ${OAUTH2_PROVIDER_CLIENT_ID}
-                    client-secret: ${OAUTH2_PROVIDER_CLIENT_SECRET}
-                    introspection-uri: ${OAUTH2_PROVIDER_INTROSPECTION_URL}
-    datasource:
-        driver-class-name: org.postgresql.Driver
-        password: ${DATASOURCE_PASSWORD}
-        url: jdbc:postgresql://${DATASOURCE_HOST}/${DATASOURCE_NAME}
-        username: ${DATASOURCE_USERNAME}
-    jpa:
-        open-in-view: true
-    flyway:
+  application:
+    name: product-retriever-service
+  cloud:
+    loadbalancer:
+      cache:
         enabled: true
-        baseline-on-migrate: true
-        validate-on-migrate: true
+      enabled: true
+  devtools:
+    livereload:
+      enabled: true
+      port: ${LIVERELOAD_PORT:35730}
+  main:
+    banner-mode: 'off'
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_PROVIDER_ISSUER_URL}
+        opaquetoken:
+          client-id: ${OAUTH2_PROVIDER_CLIENT_ID}
+          client-secret: ${OAUTH2_PROVIDER_CLIENT_SECRET}
+          introspection-uri: ${OAUTH2_PROVIDER_INTROSPECTION_URL}
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: ${DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://${DATASOURCE_HOST}/${DATASOURCE_NAME}
+    username: ${DATASOURCE_USERNAME}
+  jpa:
+    open-in-view: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    validate-on-migrate: true

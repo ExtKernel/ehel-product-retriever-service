@@ -62,7 +62,7 @@ public class AuthCodeControllerIT extends EbayAbstractIntegrationTest {
 
         // test 200 OK and get the result
         AuthCode result = performGetRequestExpectedSuccess(
-                "/secured/auth-code/latest",
+                "/auth-code/latest",
                 AuthCode.class
         );
         // check the result itself

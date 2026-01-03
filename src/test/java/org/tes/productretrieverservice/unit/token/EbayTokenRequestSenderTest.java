@@ -12,6 +12,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.tes.productretrieverservice.TestFactory;
 import org.tes.productretrieverservice.model.AuthCode;
@@ -55,7 +57,7 @@ public class EbayTokenRequestSenderTest extends TestFactory {
         AuthCode authCode = buildValidAuthCode();
         String ebayTokensJsonString = getEbayTokensJsonString();
         JsonNode ebayTokensJsonNode = getEbayTokensJsonNode();
-        HttpEntity<String> httpEntity = new HttpEntity<>("mockRequestBody");
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(new LinkedMultiValueMap<>());
 
         when(requestBuilder.buildHttpRequestEntity(eq(user), any())).thenReturn(httpEntity);
         when(restTemplate.exchange(
@@ -77,10 +79,10 @@ public class EbayTokenRequestSenderTest extends TestFactory {
             throws Exception {
         EbayUser user = buildEbayUser();
         RefreshToken refreshToken = buildValidRefreshToken();
-        String refreshTokenRequestBody = buildStringRefreshTokenRequestBody(refreshToken);
+        MultiValueMap<String, String> refreshTokenRequestBody = buildStringRefreshTokenRequestBody(refreshToken);
         String ebayTokensJsonString = getEbayTokensJsonString();
         JsonNode ebayTokensJsonNode = getEbayTokensJsonNode();
-        HttpEntity<String> httpEntity = new HttpEntity<>(refreshTokenRequestBody, buildBasicAuthHttpHeaders(
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(refreshTokenRequestBody, buildBasicAuthHttpHeaders(
                 user.getClientId(),
                 user.getClientSecret()
         ));

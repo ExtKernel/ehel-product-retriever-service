@@ -186,23 +186,6 @@ You can enter this endpoint in the "Your auth accepted" field on the "User Token
     - `-e OAUTH2_PROVIDER_CLIENT_SECRET=<value>`
     - `-e OAUTH2_PROVIDER_INTROSPECTION_URL=<value>`
 
-   You may also specify the optional ones if you want:
-    - `-e IPA_API_ENDPOINT=<value>`
-    - `-e IPA_API_AUTH_ENDPOINT=<value>`
-    - `-e KC_ADMIN_CLI_CLIENT_ID=<value>`
-
-   ### If you are going to synchronize FreeIPA clients:
-    1) Copy your `ca.crt` certificate file to the container:
-       ```bash
-         docker cp <path-to-certificate-file-on-your-local-machine> <container-id-or-name>:/app/<desired-certificate-file-name>.crt
-       ```
-    2) Make sure you specify the path to the certificate(by default `ca.crt`) file correctly when creating the **(Free)IPA Client**:
-       ```json
-       {
-         "certPath": "/app/<specified-in-the-previous-step-certificate-file-name>.crt"
-       }
-       ```
-
 **BUT BE AWARE**: `-e SERVER_PORT=<value>` - changes the internal port of the service, which won't be considered by the [Dockerfile](Dockerfile). There always will be port `8000` exposed, until you change it and build the image yourself.
 
 ## Environment Variables

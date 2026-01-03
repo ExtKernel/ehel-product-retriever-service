@@ -7,6 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.tes.productretrieverservice.TestFactory;
 import org.tes.productretrieverservice.model.AuthCode;
@@ -14,10 +16,7 @@ import org.tes.productretrieverservice.model.EbayUser;
 import org.tes.productretrieverservice.model.RefreshToken;
 import org.tes.productretrieverservice.token.EbayTokenRequestBuilder;
 
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EbayTokenRequestBuilderTest extends TestFactory {
@@ -31,9 +30,9 @@ public class EbayTokenRequestBuilderTest extends TestFactory {
     @Test
     public void givenUserAndRequestBody_whenBuildHttpRequestEntity_thenReturnHttpEntity() {
         EbayUser user = buildEbayUser();
-        String requestBody = "test-request-body";
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(requestBody, buildBasicAuthHttpHeaders(
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(requestBody, buildBasicAuthHttpHeaders(
                 user.getClientId(),
                 user.getClientSecret()
         ));
@@ -50,18 +49,12 @@ public class EbayTokenRequestBuilderTest extends TestFactory {
         EbayUser user = buildEbayUser();
 
         AuthCode authCode = buildValidAuthCode();
-        Map<String, String> requestBody = buildHashMapAuthModelRequestBody(
-                user,
-                authCode
-        );
-        String stringRequestBody = buildStringAuthModelRequestBody(
+        MultiValueMap<String, String> requestBody = buildHashMapAuthModelRequestBody(
                 user,
                 authCode
         );
 
-        when(objectMapper.writeValueAsString(requestBody)).thenReturn(stringRequestBody);
-
-        assertEquals(stringRequestBody, ebayTokenRequestBuilder.buildAuthModelRequestBody(
+        assertEquals(requestBody, ebayTokenRequestBuilder.buildAuthModelRequestBody(
                 user,
                 authCode
         ));
@@ -71,12 +64,9 @@ public class EbayTokenRequestBuilderTest extends TestFactory {
     public void givenRefreshToken_whenBuildRefreshTokenRequestBody_thenReturnRequestBody()
             throws Exception {
         RefreshToken refreshToken = buildValidRefreshToken();
-        Map<String, String> requestBody = buildHashMapRefreshTokenRequestBody(refreshToken);
-        String stringRequestBody = buildStringRefreshTokenRequestBody(refreshToken);
+        MultiValueMap<String, String> requestBody = buildHashMapRefreshTokenRequestBody(refreshToken);
 
-        when(objectMapper.writeValueAsString(requestBody)).thenReturn(stringRequestBody);
-
-        assertEquals(stringRequestBody, ebayTokenRequestBuilder.buildRefreshTokenRequestBody(refreshToken));
+        assertEquals(requestBody, ebayTokenRequestBuilder.buildRefreshTokenRequestBody(refreshToken));
     }
 
     @Test

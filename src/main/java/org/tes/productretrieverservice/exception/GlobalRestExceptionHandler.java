@@ -51,6 +51,21 @@ public class GlobalRestExceptionHandler {
         );
     }
 
+    // Handle empty item summaries returned by the eBay API
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ItemSummariesEmptyException.class)
+    public ErrorResponse handleItemSummariesEmptyException(
+            Exception exception,
+            WebRequest request
+    ) {
+        return handleException(
+                exception,
+                request,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                exception.getMessage()
+        );
+    }
+
     // Handle expired auth code exceptions
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ExpiredAuthCodeException.class)

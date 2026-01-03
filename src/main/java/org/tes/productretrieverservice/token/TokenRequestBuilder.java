@@ -1,6 +1,7 @@
 package org.tes.productretrieverservice.token;
 
 import org.springframework.http.HttpEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.tes.productretrieverservice.model.AuthModel;
 import org.tes.productretrieverservice.model.RefreshToken;
@@ -23,9 +24,9 @@ public interface TokenRequestBuilder<UserType extends User, AuthModelType extend
      * @param requestBody a request body to include in the {@link HttpEntity}.
      * @return the {@link HttpEntity}.
      */
-    HttpEntity buildHttpRequestEntity(
+    HttpEntity<MultiValueMap<String, String>> buildHttpRequestEntity(
             UserType user,
-            String requestBody
+            MultiValueMap<String, String> requestBody
     );
 
     /**
@@ -36,7 +37,7 @@ public interface TokenRequestBuilder<UserType extends User, AuthModelType extend
      * @param authModel the {@link AuthModelType}.
      * @return the request body.
      */
-    String buildAuthModelRequestBody(
+    MultiValueMap<String, String> buildAuthModelRequestBody(
             UserType user,
             AuthModelType authModel
     );
@@ -48,7 +49,7 @@ public interface TokenRequestBuilder<UserType extends User, AuthModelType extend
      * @param refreshToken the {@link RefreshToken}.
      * @return the request body.
      */
-    String buildRefreshTokenRequestBody(RefreshToken refreshToken);
+    MultiValueMap<String, String> buildRefreshTokenRequestBody(RefreshToken refreshToken);
 
     /**
      * Get a custom {@link RestTemplate} object, tailored for the specific needs.

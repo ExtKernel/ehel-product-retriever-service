@@ -2,6 +2,7 @@ package org.tes.productretrieverservice.item;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
+import org.tes.productretrieverservice.exception.ItemSummariesEmptyException;
 import org.tes.productretrieverservice.model.EbayItem;
 
 import java.util.ArrayList;
@@ -15,12 +16,17 @@ public class DefaultEbayItemJsonObjectMapper implements EbayItemJsonObjectMapper
 
     @Override
     public List<EbayItem> mapItemsJsonToItems(JsonNode ebayItemJsonNode) {
-        JsonNode itemSummariesEbayJsonNode = ebayItemJsonNode.get("itemSummaries");
+        try {
+            JsonNode itemSummariesEbayJsonNode = ebayItemJsonNode.get("itemSummaries");
 
-        List<EbayItem> ebayItems = new ArrayList<>();
-        itemSummariesEbayJsonNode.forEach(ebayItemJson -> ebayItems.add(mapItemJsonToItem(ebayItemJson)));
+            List<EbayItem> ebayItems = new ArrayList<>();
+            itemSummariesEbayJsonNode.forEach(ebayItemJson -> ebayItems.add(mapItemJsonToItem(ebayItemJson)));
 
-        return ebayItems;
+            return ebayItems;
+        } catch (NullPointerException exception) {
+            throw new ItemSummariesEmptyException("Item summaries returned by the eBay API are empty. "
+                                                + "Most likely there are no results for the keyword");
+        }
     }
 
     @Override

@@ -8,7 +8,6 @@ import org.tes.productretrieverservice.model.AuthCode;
 import org.tes.productretrieverservice.repository.AuthCodeRepository;
 
 import java.time.Instant;
-import java.util.Date;
 
 @Service
 public class AuthCodeService extends GenericCrudService<AuthCode, Long> {
@@ -30,14 +29,10 @@ public class AuthCodeService extends GenericCrudService<AuthCode, Long> {
      */
     public AuthCode getValid() {
         AuthCode authCode = findLatest();
+        Instant expiration = authCode.getCreationDate().toInstant().plusSeconds(authCode.getExpiresIn());
 
-        // check if the code is expired by adding its expiration time to the creation date
-        // if the resulting date-time is before the current moment, the code is expired
-        Date authCodeExpirationDate = Date.from(Instant.ofEpochMilli(
-                    authCode.getCreationDate().getTime() + authCode.getExpiresIn()));
-
-        if (!authCodeExpirationDate.after(new Date())) throw new ExpiredAuthCodeException(
-                "The auth code has expired."
+        if (Instant.now().isAfter(expiration)) throw new ExpiredAuthCodeException(
+                "The auth code with id " + authCode.getId() + " and creation timestamp " + authCode.getCreationDate().toString() + " has expired."
                         + " It was valid for "
                         + authCode.getExpiresIn()
         );
